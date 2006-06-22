@@ -1,6 +1,7 @@
 bin_PROGRAMS = rs_stattoolgtk
 rs_stattoolgtk_SOURCES = rs_stattoolgtk.cpp mainwindow.cpp playerview.cpp \
-			clistview.cpp utilities.cpp rsparser.cpp infodialog.cpp
+				clistview.cpp utilities.cpp rsparser.cpp infodialog.cpp comparedialog.cpp \
+	comparelistview.cpp
 
 # set the include path found by configure
 INCLUDES= $(all_includes)
@@ -14,4 +15,4 @@ rs_stattoolgtk_LDADD = -lcurl -lpthread -lgthread-2.0 -L/usr/X11R6/lib \
 	-lcairo -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lfreetype -lfontconfig \
 	-lXrender -lX11 -lXext -lpng12 -lz -lm
 noinst_HEADERS = mainwindow.h playerview.h common.h clistview.h rsparser.h \
-		utilities.h infodialog.h
+			utilities.h infodialog.h comparedialog.h comparelistview.h

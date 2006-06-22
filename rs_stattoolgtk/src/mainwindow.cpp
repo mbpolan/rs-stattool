@@ -30,6 +30,7 @@
 #include <gtkmm/stock.h>
 
 // project includes
+#include "comparedialog.h"
 #include "mainwindow.h"
 #include "playerview.h"
 #include "rsparser.h"
@@ -49,6 +50,7 @@ MainWindow::~MainWindow() {
 	// free memory
 	delete m_Parser;
 	delete m_AboutDialog;
+	delete m_CompareDialog;
 };
 
 // search button click handler
@@ -97,6 +99,11 @@ void MainWindow::on_data_ready(int code, char *data) {
 	m_SearchButton->set_sensitive(true);
 };
 
+// compare slot handler
+void MainWindow::on_compare_players() {
+	m_CompareDialog->run();
+};
+
 // about signal handler
 void MainWindow::on_about() {
 	// bring up the about dialog
@@ -136,13 +143,16 @@ void MainWindow::construct() {
 	m_AboutDialog->set_name("RuneScape Stat Tool");
 	
 	// version
-	m_AboutDialog->set_version("0.1");
+	m_AboutDialog->set_version("0.2");
 	
 	// comments
 	m_AboutDialog->set_comments("This is a simple tool for fetching "
 			 	    "player stats. To search a user, type in "
 				    "his or her name in the above box, and click "
 				    "the Go button.");
+	
+	// compare dialog
+	m_CompareDialog=new CompareDialog;
 	
 	///////////////////////////////////////////////
 	// widget allocation
@@ -170,10 +180,15 @@ void MainWindow::construct() {
 	// add actions
 	m_Actions->add(Gtk::Action::create("FileQuit", Gtk::Stock::QUIT, "_Quit", "Quit the program"),
 		       sigc::mem_fun(*this, &MainWindow::on_quit));
+	
+	m_Actions->add(Gtk::Action::create("ToolsCompare", "_Compare", "Compare two players"),
+		       sigc::mem_fun(*this, &MainWindow::on_compare_players));
+	
 	m_Actions->add(Gtk::Action::create("HelpAbout", Gtk::Stock::ABOUT, "_About", "About this program"),
 		       sigc::mem_fun(*this, &MainWindow::on_about));
 	
 	m_Actions->add(Gtk::Action::create("FileMenu", "File"));
+	m_Actions->add(Gtk::Action::create("ToolsMenu", "Tools"));
 	m_Actions->add(Gtk::Action::create("HelpMenu", "Help"));
 	
 	// create ui manager
@@ -186,6 +201,9 @@ void MainWindow::construct() {
 	"	<menubar name='MenuBar'>"
 	"		<menu action='FileMenu'>"
 	"			<menuitem action='FileQuit'/>"
+	"		</menu>"
+	"		<menu action='ToolsMenu'>"
+	"			<menuitem action='ToolsCompare'/>"
 	"		</menu>"
 	"		<menu action='HelpMenu'>"
 	"			<menuitem action='HelpAbout'/>"

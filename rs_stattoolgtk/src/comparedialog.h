@@ -17,91 +17,45 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-// mainwindow.h: the MainWindow of the application
+// comparedialog.h: dialog for comparing users
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef COMPAREDIALOG_H
+#define COMPAREDIALOG_H
 
-// gtk includes
-#include <gtkmm/actiongroup.h>
-#include <gtkmm/window.h>
-#include <gtkmm/uimanager.h>
+// necessary includes
+#include <gtkmm/dialog.h>
+#include <gtkmm/scrolledwindow.h>
+
+// project includes
+#include "common.h"
 
 // forward declarations
-class Gtk::AboutDialog;
-class Gtk::Button;
-class Gtk::Entry;
 class Gtk::Label;
-class Gtk::Statusbar;
-class CompareDialog;
-class PlayerView;
-class RSParser;
+class CompareListView;
 
-// the core window
-class MainWindow: public Gtk::Window {
+// dialog with listview for player comparisons
+class CompareDialog: public Gtk::Dialog {
 	public:
 		// constructor
-		MainWindow();
+		CompareDialog();
 		
-		// destructor
-		~MainWindow();
+		// set players to compare
+		void set_players(const PlayerData &p1, const PlayerData &p2);
 		
 	protected:
-		/////////////////////////////
-		// signal handlers
-		/////////////////////////////
-		
-		// search button handler
-		void on_search_button_clicked();
-		
-		// transfer begin handler
-		void on_transfer_start();
-		
-		// player data arrival handler
-		void on_data_ready(int code, char *data);
-		
-		// compare slot handler
-		void on_compare_players();
-		
-		// about signal handler
-		void on_about();
-		
-		// quit signal handler
-		void on_quit();
-		
-		/////////////////////////////
-		
-		// build the ui
-		void construct();
-		
-		// buttons
-		Gtk::Button *m_SearchButton;
-		
-		// entries
-		Gtk::Entry *m_PlayerEntry;
+		// signal response handler
+		virtual void on_response(int id);
 		
 		// labels
 		Gtk::Label *m_TitleLabel;
-		Gtk::Label *m_SearchLabel;
+		Gtk::Label *m_P1Label;
+		Gtk::Label *m_P2Label;
 		
-		// main player view area
-		PlayerView *m_NB;
+		// scrolled window
+		Gtk::ScrolledWindow *m_SW;
 		
-		// menu stuff
-		Glib::RefPtr<Gtk::ActionGroup> m_Actions;
-		Glib::RefPtr<Gtk::UIManager> m_UI;
-		
-		// status bar
-		Gtk::Statusbar *m_StatusBar;
-		
-		// about dialog
-		Gtk::AboutDialog *m_AboutDialog;
-		
-		// comparison dialog
-		CompareDialog *m_CompareDialog;
-		
-		// rs parser
-		RSParser *m_Parser;
+		// list view
+		CompareListView *m_ListView;
 };
 
 #endif
