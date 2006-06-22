@@ -1,0 +1,60 @@
+===================
+RuneScape Stat Tool
+===================
+Release date: June 21, 2006
+Version: 0.1
+
+Official homepage: http://rs-stattool.sf.net
+
+------------------
+Table of Contents
+------------------
+1. Introduction
+2. What's New?
+3. Installation
+4. Usage
+5. License
+6. Authors
+-----------------
+
+~~~~~~~~~~~~~~~~~
+1. Introduction
+~~~~~~~~~~~~~~~~~
+This is a simple tool that fetches a RuneScape player's high scores 
+stats and allows you to save them, compare users, etc.
+
+~~~~~~~~~~~~~~~~~
+2. What's New?
+~~~~~~~~~~~~~~~~~
+This being the first release, only the basics have been implemented.
+Available now: downloading of player stats
+
+~~~~~~~~~~~~~~~~~
+3. Installation
+~~~~~~~~~~~~~~~~~
+For detailed instructions, see the INSTALL file provided in this
+distribution.
+
+There are a few dependencies that are required:
+-gtkmm-2.4
+-libcurl
+
+~~~~~~~~~~~~~~~~~
+4. Usage
+~~~~~~~~~~~~~~~~~
+At this point, the app is very simple to use. Basically, you just type
+in the desired player's name in the text box. Once you feel confident,
+click the Go button, and the stats will be downloaded.
+
+You can check the progress by checking the status bar on the bottom. Any
+errors will also be displayed.
+
+~~~~~~~~~~~~~~~~~
+5. License
+~~~~~~~~~~~~~~~~~
+This software is licensed under the terms of the GNU GPL License.
+
+~~~~~~~~~~~~~~~~~
+6. Authors
+~~~~~~~~~~~~~~~~~
+Lead developer: Mike Polan (kanadakid@gmail.com)
