@@ -35,7 +35,12 @@ RSParser::RSParser() {
 void RSParser::get_player_data(const Glib::ustring &name) {
 	// create a new handler thread
 	m_Threads.push_back(Glib::Thread::create(
-			sigc::bind(sigc::mem_fun(*this, &RSParser::thread_get_player_data), name), false));
+			sigc::bind(sigc::mem_fun(*this, &RSParser::thread_get_player_data), name),
+			false));
+	
+	// connect dispatcher signals
+	dispatcher_transfer_start.connect(sigc::mem_fun(*this, &RSParser::on_process_transfer_start));
+	dispatcher_data_ready.connect(sigc::mem_fun(*this, &RSParser::on_process_data_ready));
 };
 
 // parse html data
@@ -128,6 +133,16 @@ PlayerData RSParser::parse_html(char *data, bool *ok) {
 	return player;
 };
 
+void RSParser::on_process_transfer_start() {
+	// emit the actual transfer_start signal
+	signal_transfer_start.emit();
+};
+
+void RSParser::on_process_data_ready() {
+	// emit actual data_ready signal
+	signal_data_ready.emit(m_Data.code, (m_Data.data ? m_Data.data : NULL));
+};
+
 // get player data thread routine
 void RSParser::thread_get_player_data(const Glib::ustring &name) {
 	// clear chunk
@@ -146,28 +161,22 @@ void RSParser::thread_get_player_data(const Glib::ustring &name) {
 	curl_easy_setopt(handle, CURLOPT_URL, RS_HI_SCORES_URL);
 	curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, &RSParser::curl_write_func);
 	curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void*) &m_Chunk);
-	curl_easy_setopt(handle, CURLOPT_PROGRESSFUNCTION, &RSParser::curl_progess_func);
-	curl_easy_setopt(handle, CURLOPT_PROGRESSDATA, (void*) this);
 	
 	// emit transfer start signal
-	signal_transfer_start.emit();
+	dispatcher_transfer_start.emit();
 	
 	// perform curl session
 	CURLcode code=curl_easy_perform(handle);
 	
+	// set transfer stats
+	m_Data.code=code;
+	m_Data.data=m_Chunk.get_data();
+	
 	// emit data done signal
-	signal_data_ready.emit(code, (m_Chunk.get_data() ? m_Chunk.get_data() : NULL));
+	dispatcher_data_ready.emit();
 	
 	// clean up
 	curl_easy_cleanup(handle);
-};
-
-// curl progress function
-int RSParser::curl_progess_func(void *userp, double t, double d, 
-				double ultotal, double ulnow) {
-	// emit update signal
-	RSParser *parser=(RSParser*) userp;
-	parser->signal_data_progress.emit(t, d);
 };
 
 size_t RSParser::curl_write_func(void *ptr, size_t size, size_t nmemb, void *userp) {

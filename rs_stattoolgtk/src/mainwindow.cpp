@@ -66,10 +66,6 @@ void MainWindow::on_transfer_start() {
 	m_StatusBar->push("Downloading stats...");
 };
 
-// data progress handler
-void MainWindow::on_data_progress(double t, double d) {
-};
-
 // player data arrival handler
 void MainWindow::on_data_ready(int code, char *data) {
 	// error check
@@ -126,8 +122,6 @@ void MainWindow::construct() {
 			sigc::mem_fun(*this, &MainWindow::on_data_ready));
 	m_Parser->signal_transfer_start.connect(
 			sigc::mem_fun(*this, &MainWindow::on_transfer_start));
-	m_Parser->signal_data_progress.connect(
-			sigc::mem_fun(*this, &MainWindow::on_data_progress));
 	
 	///////////////////////////////////////////////
 	// dialog allocation
@@ -225,6 +219,7 @@ void MainWindow::construct() {
 	
 	// allocate entries
 	m_PlayerEntry=manage(new Gtk::Entry);
+	m_PlayerEntry->set_max_length(RS_MAX_PLAYER_NAME_LENGTH);
 	
 	// allocate labels
 	m_TitleLabel=manage(new Gtk::Label);

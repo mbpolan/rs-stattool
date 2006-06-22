@@ -55,9 +55,6 @@ class MainWindow: public Gtk::Window {
 		// transfer begin handler
 		void on_transfer_start();
 		
-		// data progress handler
-		void on_data_progress(double t, double d);
-		
 		// player data arrival handler
 		void on_data_ready(int code, char *data);
 		

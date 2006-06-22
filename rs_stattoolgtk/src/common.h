@@ -29,6 +29,9 @@
 // url to hi score server
 #define RS_HI_SCORES_URL "http://hiscore.runescape.com/lang/en/aff/runescape/hiscorepersonal.ws"
 
+// maximum characters allowed in player's name
+#define RS_MAX_PLAYER_NAME_LENGTH	12
+
 // total amount of skills
 #define SKILL_COUNT	22
 
@@ -64,6 +67,15 @@ typedef struct {
 	// skills
 	SkillData skills[SKILL_COUNT];
 } PlayerData;
+
+// transfer data from parser
+typedef struct {
+	// the data recieved
+	char *data;
+	
+	// curl transfer code, if any
+	int code;
+} TransferData;
 
 /////////////////////////////////////////////
 // memory management

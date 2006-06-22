@@ -32,7 +32,7 @@
 #include "common.h"
 
 // rs html parser
-class RSParser {
+class RSParser: public sigc::trackable {
 	public:
 		// constructor
 		RSParser();
@@ -44,25 +44,29 @@ class RSParser {
 		// parse html data
 		PlayerData parse_html(char *data, bool *ok);
 		
+		// get transfer data
+		TransferData get_transfer_data() const { return m_Data; };
+		
+		// check if transfer was successful
+		bool transfer_ok() { return (m_Data.data!=NULL); };
+		
 		//////////////////////////////////////////////////
 		// signals
 		//////////////////////////////////////////////////
 		// signal emitted when transfer has begun
 		sigc::signal<void> signal_transfer_start;
 		
-		// signal emitted when progress is reported
-		sigc::signal<void, double, double> signal_data_progress;
-		
 		// signal emitted when player data is recieved
+		//sigc::signal<void, int, char*> signal_data_ready;
 		sigc::signal<void, int, char*> signal_data_ready;
 		
 	protected:
+		// dispatcher slots for inter-thread communication
+		void on_process_transfer_start();
+		void on_process_data_ready();
+		
 		// get player data thread funcion
 		void thread_get_player_data(const Glib::ustring &name);
-		
-		// curl progress handler
-		static int curl_progess_func(void *userp, double t, double d,
-					    double ultotal, double ulnow);
 		
 		// curl write function
 		static size_t curl_write_func(void *ptr, size_t size, size_t nmemb, void *userp);
@@ -72,6 +76,13 @@ class RSParser {
 		
 		// curl data from previous session
 		MemChunk m_Chunk;
+		
+		// transfered data
+		TransferData m_Data;
+		
+		// dispatcher signals
+		Glib::Dispatcher dispatcher_transfer_start;
+		Glib::Dispatcher dispatcher_data_ready;
 		
 		// Threads
 		std::vector<Glib::Thread*> m_Threads;
