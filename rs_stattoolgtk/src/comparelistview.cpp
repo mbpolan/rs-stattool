@@ -19,11 +19,19 @@
  ***************************************************************************/
 // comparelistview.cpp: implementation of CompareListView classes
 
+// necessary includes
+#include <vector>
+
 // project includes
 #include "comparelistview.h"
+#include "utilities.h"
 
 // constructor
 CompareListView::CompareListView() {
+	// allocate model
+	m_Model=Gtk::ListStore::create(m_Columns);
+	set_model(m_Model);
+	
 	// set columns
 	append_column("Skill", m_Columns.m_Skill);
 	
@@ -48,6 +56,60 @@ CompareListView::CompareListView() {
 
 // set comparison data
 void CompareListView::set_compare_data(const PlayerData &p1, const PlayerData &p2) {
+	// grab skills and add them in
+	for (int i=0; i<SKILL_COUNT; i++) {
+		Gtk::TreeModel::Row row=*(m_Model->append());
+		
+		// skill name
+		row[m_Columns.m_Skill]=p1.skills[i].name;
+		
+		// player 1 data
+		row[m_Columns.m_P1Rank]=p1.skills[i].rank;
+		row[m_Columns.m_P1Level]=p1.skills[i].level;
+		row[m_Columns.m_P1Exp]=p1.skills[i].xp;
+		
+		// player 2 data
+		row[m_Columns.m_P2Rank]=p2.skills[i].rank;
+		row[m_Columns.m_P2Level]=p2.skills[i].level;
+		row[m_Columns.m_P2Exp]=p2.skills[i].xp;
+	}
+	
+	// color the rows based on player rank
+	color_rows();
+};
+
+void CompareListView::color_rows() {
+	// get list of columns
+	std::vector<Gtk::TreeViewColumn*> columns=get_columns();
+	Gtk::TreeModel::Children children=get_model()->children();
+	
+	// iterate over rows and columns
+	for (int i=0; i<children.size(); i++) {
+		Gtk::TreeModel::Row row=*(children[i]);
+		
+		// get attributes, converted to ints
+		int p1Rank=Utils::ustring_to_int(row[m_Columns.m_P1Rank]);
+		int p2Rank=Utils::ustring_to_int(row[m_Columns.m_P2Rank]);
+		
+		// compare player 1 to player 2
+		// the lower the rank, the better the player
+		if (p1Rank<p2Rank)
+			row[m_Columns.m_Color]=COMPARE_COLOR_HI;
+		else if (p1Rank==p2Rank)
+			row[m_Columns.m_Color]=COMPARE_COLOR_EVEN;
+		else
+			row[m_Columns.m_Color]=COMPARE_COLOR_LOW;
+		
+		// iterate over columns
+		for (int y=0; y<columns.size(); y++) {
+			Gtk::TreeView::Column *col=get_column(y);
+			
+			// get the renderer and set its color property
+			Gtk::CellRenderer *renderer=col->get_first_cell_renderer();
+			col->add_attribute(renderer->property_cell_background(),
+					   m_Columns.m_Color);
+		}
+	}
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -109,9 +171,19 @@ void SeparatorCellRenderer::render_vfunc(const Glib::RefPtr<Gdk::Drawable>& wind
 	// cast the window
 	Glib::RefPtr<Gdk::Window> win=Glib::RefPtr<Gdk::Window>::cast_dynamic<>(window);
 	
+	// allocate color by system colormap
+	Gdk::Color shaded("DarkSlateGray");
+	Glib::RefPtr<Gdk::GC> gc=Gdk::GC::create(win);
+	Glib::RefPtr<Gdk::Colormap> cm=Gdk::Colormap::get_system();
+	cm->alloc_color(shaded);
+	
+	// draw the cell
+	win->draw_rectangle(gc, true, x_offset, y_offset, w, h);
+	
 	// draw the inactive background
-	widget.get_style()->paint_box(win, Gtk::STATE_INSENSITIVE, Gtk::SHADOW_NONE,
+	/*widget.get_style()->paint_box(win, Gtk::STATE_INSENSITIVE, Gtk::SHADOW_NONE,
 				      cell_area, widget, "0", 
 				      x_offset, y_offset,
 				      w, h);
+	*/
 };

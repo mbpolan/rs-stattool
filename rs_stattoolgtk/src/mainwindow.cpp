@@ -23,6 +23,7 @@
 #include <gtkmm/aboutdialog.h>
 #include <gtkmm/box.h>
 #include <gtkmm/button.h>
+#include <gtkmm/comboboxtext.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/label.h>
 #include <gtkmm/messagedialog.h>
@@ -101,7 +102,75 @@ void MainWindow::on_data_ready(int code, char *data) {
 
 // compare slot handler
 void MainWindow::on_compare_players() {
-	m_CompareDialog->run();
+	// build dialog
+	Gtk::Dialog d;
+	Gtk::VBox *vb=d.get_vbox();
+	vb->set_spacing(5);
+	vb->set_border_width(5);
+	
+	// layout boxes
+	Gtk::HBox *hb1=manage(new Gtk::HBox);
+	Gtk::HBox *hb2=manage(new Gtk::HBox);
+	hb1->set_spacing(5);
+	hb2->set_spacing(5);
+	
+	// labels
+	Gtk::Label *title=manage(new Gtk::Label("Compare Players"));
+	Gtk::Label *p1=manage(new Gtk::Label("Player 1"));
+	Gtk::Label *p2=manage(new Gtk::Label("Player 2"));
+	
+	// combo boxes
+	Gtk::ComboBoxText *p1cb=manage(new Gtk::ComboBoxText);
+	Gtk::ComboBoxText *p2cb=manage(new Gtk::ComboBoxText);
+	
+	// add player names
+	PlayerView::playerMap map=m_NB->get_map();
+	for (PlayerView::playerMap::iterator it=map.begin(); it!=map.end(); ++it) {
+		p1cb->append_text((*it).first);
+		p2cb->append_text((*it).first);
+	}
+	p1cb->set_active(0);
+	p2cb->set_active(1);
+	
+	// add buttons
+	d.add_button("OK", 1);
+	d.add_button("Cancel", 0);
+	
+	// pack widgets
+	vb->pack_start(*title);
+	hb1->pack_start(*p1);
+	hb1->pack_start(*p1cb);
+	hb2->pack_start(*p2);
+	hb2->pack_start(*p2cb);
+	vb->pack_start(*hb1, Gtk::PACK_SHRINK);
+	vb->pack_start(*hb2, Gtk::PACK_SHRINK);
+	
+	d.show_all_children();
+	
+	// run the choice dialog
+	int res=d.run();
+	if (res) {
+		// check text
+		Glib::ustring player1=p1cb->get_active_text();
+		Glib::ustring player2=p2cb->get_active_text();
+		if (player1.empty() || player2.empty()) {
+			// display error
+			Gtk::MessageDialog md(*this, "You must choose both players", false,
+					       Gtk::MESSAGE_WARNING);
+			md.run();
+			return;
+		}
+		
+		// get both players' data
+		PlayerData p1=m_NB->get_player_data(player1);
+		PlayerData p2=m_NB->get_player_data(player2);
+		
+		// set the data
+		m_CompareDialog->set_players(p1, p2);
+		
+		// run the dialog
+		m_CompareDialog->run();
+	}
 };
 
 // about signal handler

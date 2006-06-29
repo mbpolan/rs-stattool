@@ -39,7 +39,13 @@ class CompareListView: public Gtk::TreeView {
 		// set comparison data
 		void set_compare_data(const PlayerData &p1, const PlayerData &p2);
 		
+		// clear the list
+		void clear() { m_Model->clear(); };
+		
 	protected:
+		// color the rows based on each players' rank
+		void color_rows();
+		
 		// column record
 		class ColumnRec: public Gtk::TreeModelColumnRecord {
 			public:
@@ -56,6 +62,8 @@ class CompareListView: public Gtk::TreeView {
 					add(m_P2Rank);
 					add(m_P2Level);
 					add(m_P2Exp);
+					
+					add(m_Color);
 				};
 				
 				// columns
@@ -70,6 +78,8 @@ class CompareListView: public Gtk::TreeView {
 				Gtk::TreeModelColumn<Glib::ustring> m_P2Rank;
 				Gtk::TreeModelColumn<Glib::ustring> m_P2Level;
 				Gtk::TreeModelColumn<Glib::ustring> m_P2Exp;
+				
+				Gtk::TreeModelColumn<Glib::ustring> m_Color;
 		};
 		
 		// column record instance

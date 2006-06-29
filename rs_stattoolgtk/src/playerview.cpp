@@ -125,9 +125,17 @@ PlayerData PlayerView::get_player_data(const Glib::ustring &name) {
 		long texp=0;
 		
 		// iterate over rows
+		int c=0;
 		for (; it!=lrows.end(); ++it) {
+			// skill struct
+			SkillData skill;
+			
+			// get name
+			skill.name=(*it)[list->m_Columns.m_Skill];
+			
 			// get level
 			Glib::ustring lvl=(*it)[list->m_Columns.m_Level];
+			skill.level=lvl;
 			
 			// convert to integer
 			int ilvl=Utils::ustring_to_int(lvl);
@@ -135,16 +143,22 @@ PlayerData PlayerView::get_player_data(const Glib::ustring &name) {
 			
 			// get exp
 			Glib::ustring exp=(*it)[list->m_Columns.m_Exp];
+			skill.xp=exp;
 			
 			// convert to integer
 			int iexp=Utils::ustring_to_int(exp);
 			texp+=iexp;
+			
+			// get rank
+			skill.rank=(*it)[list->m_Columns.m_Rank];
+			
+			// add skill
+			player.skills[c++]=skill;
 		}
 		
 		// convert totals back to ustring
 		player.overallLvl=Utils::int_to_ustring(tlevel);
 		player.overallExp=Utils::int_to_ustring(texp);
-		//g_message("Lvl: %s\nExp: %s\n", player.overallLvl.c_str(),player.overallExp.c_str());
 	}
 	
 	return player;
@@ -197,6 +211,9 @@ void PlayerView::on_list_close() {
 		if (name!="RS Stat Tool") {
 			// close the page
 			remove_page(*w);
+			
+			// remove from map
+			m_PlayerMap.erase(name);
 		}
 	}
 };

@@ -22,14 +22,19 @@
 // necessary includes
 #include <gtkmm/label.h>
 #include <gtkmm/table.h>
+#include <sstream>
 
 // project includes
+#include "common.h"
 #include "comparedialog.h"
 #include "comparelistview.h"
 
 // CompareDialog implementation
 // constructor
 CompareDialog::CompareDialog(): Gtk::Dialog() {
+	// set default size
+	set_size_request(COMPARE_DIALOG_WIDTH, COMPARE_DIALOG_HEIGHT);
+	
 	// get the vbox
 	Gtk::VBox *vb=get_vbox();
 	
@@ -65,10 +70,44 @@ CompareDialog::CompareDialog(): Gtk::Dialog() {
 
 // set players to compare
 void CompareDialog::set_players(const PlayerData &p1, const PlayerData &p2) {
+	// create formatted strings
+	std::stringstream ss;
+	for (int i=0; i<2; i++) {
+		Glib::ustring col, name;
+		Gtk::Label *label;
+		if (i==0) {
+			col=COMPARE_COLOR_HI;
+			name=p1.name;
+			label=m_P1Label;
+		}
+		else {
+			col=COMPARE_COLOR_LOW;
+			name=p2.name;
+			label=m_P2Label;
+		}
+		
+		// format the string
+		ss << "<span background=\"" << col << 
+				"\"><b>" << name << "</b></span>";
+		
+		// set the string
+		label->set_markup(ss.str());
+		
+		// clear
+		ss.str("");
+	}
+	
+	// populate the list view
+	m_ListView->set_compare_data(p1, p2);
 };
 
 // signal response handler
 void CompareDialog::on_response(int id) {
-	if (id==1)
+	if (id==1) {
+		// clear the old tree view data
+		m_ListView->clear();
+		
+		// close this dialog
 		hide();
+	}
 };

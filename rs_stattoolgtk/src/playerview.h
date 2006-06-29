@@ -57,6 +57,10 @@ class PlayerView: public Gtk::Notebook {
 		// see if a player has a tab
 		bool player_has_tab(const Glib::ustring &name);
 		
+		// return player map
+		typedef std::map<Glib::ustring, CListView*> playerMap;
+		playerMap get_map() const { return m_PlayerMap; };
+		
 		///////////////////////////////////////
 		// signals
 		///////////////////////////////////////
@@ -84,7 +88,7 @@ class PlayerView: public Gtk::Notebook {
 		void toggle_menu_items(bool enable);
 		
 		// player map
-		std::map<Glib::ustring, CListView*> m_PlayerMap;
+		playerMap m_PlayerMap;
 		
 		// popup menu
 		Gtk::Menu *m_PopupMenu;

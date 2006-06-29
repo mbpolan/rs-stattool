@@ -35,6 +35,15 @@
 // total amount of skills
 #define SKILL_COUNT	22
 
+// tree view colors
+#define COMPARE_COLOR_LOW	"#de4040"
+#define COMPARE_COLOR_HI	"#5ade40"
+#define COMPARE_COLOR_EVEN	"#e8e773"
+
+// compare dialog dimensions
+#define COMPARE_DIALOG_WIDTH	520
+#define COMPARE_DIALOG_HEIGHT	460
+
 // skill data
 typedef struct {
 	// name
