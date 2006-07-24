@@ -91,9 +91,14 @@ void CompareListView::color_rows() {
 		int p1Rank=Utils::ustring_to_int(row[m_Columns.m_P1Rank]);
 		int p2Rank=Utils::ustring_to_int(row[m_Columns.m_P2Rank]);
 		
+		// first, check if one of the players' skills is not ranked
+		if (row[m_Columns.m_P1Rank]=="-" || 
+		    row[m_Columns.m_P2Rank]=="-")
+			row[m_Columns.m_Color]=COMPARE_COLOR_GRAY;
+		
 		// compare player 1 to player 2
 		// the lower the rank, the better the player
-		if (p1Rank<p2Rank)
+		else if (p1Rank<p2Rank)
 			row[m_Columns.m_Color]=COMPARE_COLOR_HI;
 		else if (p1Rank==p2Rank)
 			row[m_Columns.m_Color]=COMPARE_COLOR_EVEN;
