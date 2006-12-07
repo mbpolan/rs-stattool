@@ -1,8 +1,8 @@
 ===================
 RuneScape Stat Tool
 ===================
-Release date: June 21, 2006
-Version: 0.1
+Release date: December 7, 2006
+Version: 0.3
 
 Official homepage: http://rs-stattool.sf.net
 
@@ -26,8 +26,9 @@ stats and allows you to save them, compare users, etc.
 ~~~~~~~~~~~~~~~~~
 2. What's New?
 ~~~~~~~~~~~~~~~~~
-This being the first release, only the basics have been implemented.
-Available now: downloading of player stats
+Following the Hunter skill update, the layout of the personal high scores
+page was changed, at least on the HTML code part. The parser has been updated to
+work with the new changes.
 
 ~~~~~~~~~~~~~~~~~
 3. Installation
@@ -48,6 +49,14 @@ click the Go button, and the stats will be downloaded.
 
 You can check the progress by checking the status bar on the bottom. Any
 errors will also be displayed.
+
+Additionally, you can compare the skills of two users by going to
+the Tools menu and selecting Compare. Select the two players to
+compare and click OK. The skills will be high-lighted in one of four colors:
+-Green means the first player has the higher skill
+-Red means the second player has the higher skill
+-Yellow means both players have an equal level in the skill (very, very unlikely, but possible)
+-Gray means one or both players' skills are not ranked
 
 ~~~~~~~~~~~~~~~~~
 5. License

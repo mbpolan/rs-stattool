@@ -33,7 +33,7 @@
 #define RS_MAX_PLAYER_NAME_LENGTH	12
 
 // total amount of skills
-#define SKILL_COUNT	22
+#define SKILL_COUNT	23
 
 // tree view colors
 #define COMPARE_COLOR_LOW	"#de4040"

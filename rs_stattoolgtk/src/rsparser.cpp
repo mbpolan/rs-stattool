@@ -45,6 +45,10 @@ void RSParser::get_player_data(const Glib::ustring &name) {
 
 // parse html data
 PlayerData RSParser::parse_html(char *data, bool *ok) {
+	FILE *f=fopen("debug.html", "w");
+	fputs(data, f);
+	fclose(f);
+	
 	PlayerData player;
 	
 	// form a ustring from data
@@ -59,12 +63,12 @@ PlayerData RSParser::parse_html(char *data, bool *ok) {
 	else
 		*ok=true;
 	
-	// string names of skills
+	// string names of skills (in order of appearance on personl score page)
 	char *skills[] = { "Attack", "Defence", "Strength", "Hitpoints", "Ranged",
 		"Prayer", "Magic", "Cooking", "Woodcutting", "Fletching",
 		"Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
 		"Herblore", "Agility", "Thieving", "Slayer", "Farming",
-		"Runecraft", "Construction" };
+		"Runecraft", "Hunter", "Construction" };
 		
 	// get the name
 	int npos1=html.find("Personal scores for ");
@@ -86,8 +90,8 @@ PlayerData RSParser::parse_html(char *data, bool *ok) {
 			// erase string up to this point
 			html.erase(0, pos);
 			
-			// 28 bytes+skillLength to rank
-			html.erase(0, skillLength+28);
+			// 29 bytes+skillLength to rank
+			html.erase(0, skillLength+29);
 			
 			// find </td> tag
 			int tpos=html.find("</td>");

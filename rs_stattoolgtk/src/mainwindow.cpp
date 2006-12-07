@@ -212,7 +212,7 @@ void MainWindow::construct() {
 	m_AboutDialog->set_name("RuneScape Stat Tool");
 	
 	// version
-	m_AboutDialog->set_version("0.2");
+	m_AboutDialog->set_version("0.3");
 	
 	// comments
 	m_AboutDialog->set_comments("This is a simple tool for fetching "
