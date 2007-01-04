@@ -73,6 +73,9 @@ void PlayerTabDialog::DoDataExchange(CDataExchange* pDX) {
 
 // fill in the skill table
 void PlayerTabDialog::setSkillData(PlayerData pd) {
+	// clear out the list
+	m_SkillList.DeleteAllItems();
+
 	// iterate over skills
 	for (int i=0; i<SKILL_COUNT; i++) {
 		SkillData s=pd.skills[i];

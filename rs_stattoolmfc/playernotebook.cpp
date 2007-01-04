@@ -89,7 +89,6 @@ void PlayerNotebook::activateTabs() {
 	// but show our selected one
 	m_Dialogs[sel]->SetWindowPos(&wndTop, rcl.left, rcl.top, rcl.Width(), rcl.Height(), SWP_SHOWWINDOW);
 	m_Dialogs[sel]->ShowWindow(SW_SHOW);
-
 }
 
 // add a new player tab
@@ -128,22 +127,21 @@ PlayerData* PlayerNotebook::getPlayerData(CString name) {
 
 // return the name of the currently open tab
 CString PlayerNotebook::getCurrentTabName() {
-	CString str="";
+	// get the currently selected tab
 	int sel=GetCurSel();
-	if (sel==0)
-		str="RS Stat Tool";
-	else {
-		int i=0;
-		for (std::map<CString, PlayerData*>::iterator it=m_Players.begin(); 
-			 it!=m_Players.end(); ++it) {
-			if (i==sel) {
-				str=(*it).first;
-				break;
-			}
-			i++;
-		}
-	}
-	return str;
+
+	// tab item struct (we only want text)
+	TCITEM tab;
+	char buf[256]={0};
+	tab.pszText=buf;
+	tab.cchTextMax=256;
+	tab.mask=TCIF_TEXT;
+	GetItem(sel, &tab);
+
+	// get the tab text and return it as a CString
+	CString name=CString(buf);
+
+	return name;
 }
 
 // close the current tab
@@ -154,11 +152,29 @@ void PlayerNotebook::closeCurrentTab() {
 	if (sel==0)
 		return;
 
+	// first delete the player data struct
+	CString name=getCurrentTabName();
+	for (std::map<CString, PlayerData*>::iterator it=m_Players.begin(); it!=m_Players.end(); ++it) {
+		if ((*it).first==name) {
+			delete (*it).second;
+			m_Players.erase(it);
+			break;
+		}
+	}
+
 	// otherwise, close the tab
 	DeleteItem(sel);
 
 	// delete the dialog
-	delete m_Dialogs[sel];
+	int i=0;
+	for (std::vector<CDialog*>::iterator it=m_Dialogs.begin(); it!=m_Dialogs.end(); ++it) {
+		if (i==sel) {
+			delete (*it);
+			it=m_Dialogs.erase(it);
+			break;
+		}
+		i++;
+	}
 
 	// decrement page count
 	m_PageCount--;
@@ -166,6 +182,6 @@ void PlayerNotebook::closeCurrentTab() {
 		m_PageCount=0;
 
 	// set the selection to 0
-	SetCurSel(0);
-	activateTabs();
+//	SetCurSel(0);
+//	activateTabs();
 }
