@@ -21,6 +21,7 @@
 
 #pragma once
 
+#include <map>
 #include <vector>
 #include "common.h"
 
@@ -42,7 +43,13 @@ class PlayerNotebook: public CTabCtrl {
 		void activateTabs();
 
 		// add a new player tab
-		void addPlayerTab(PlayerData *pd);
+		void addPlayerTab(PlayerData pd);
+		
+		// get a player data struct for a player
+		PlayerData* getPlayerData(CString name);
+
+		// return the name of the currently open tab
+		CString getCurrentTabName();
 
 		// close the current tab
 		void closeCurrentTab();
@@ -55,6 +62,9 @@ class PlayerNotebook: public CTabCtrl {
 
 		// dialogs for tabs
 		std::vector<CDialog*> m_Dialogs;
+
+		// map of players to skill data
+		std::map<CString, PlayerData*> m_Players;
 
 		// amount of pages
 		int m_PageCount;

@@ -20,10 +20,12 @@
 // playernotebook.cpp: implementation of PlayerNotebook class
 
 #include "stdafx.h"
+#include "rsparser.h"
 #include "rs_stattoolmfc.h"
 #include "playernotebook.h"
 #include "tabs.h"
 #include "resource.h"
+#include "utilities.h"
 
 IMPLEMENT_DYNAMIC(PlayerNotebook, CTabCtrl)
 
@@ -44,8 +46,16 @@ PlayerNotebook::PlayerNotebook() {
 
 // destructor
 PlayerNotebook::~PlayerNotebook() {
+	// delete dialogs
 	for (int i=0; i<m_PageCount; i++)
 		delete m_Dialogs[i];
+
+	// delete saved player data
+	for (std::map<CString, PlayerData*>::iterator it=m_Players.begin(); 
+		 it!=m_Players.end(); ++it) {
+		if ((*it).second)
+			delete (*it).second;
+	}
 }
 
 // initialize the dialogs
@@ -83,24 +93,25 @@ void PlayerNotebook::activateTabs() {
 }
 
 // add a new player tab
-void PlayerNotebook::addPlayerTab(PlayerData *pd) {
+void PlayerNotebook::addPlayerTab(PlayerData pd) {
+	// copy the player data
+	PlayerData *pdc=new PlayerData(pd);
+
+	// calculate the total level and exp
+	pdc->overallExp=Utils::intToCString(RSParser::calculateTotalExp(pd));
+	pdc->overallLvl=Utils::intToCString(RSParser::calculateTotalLevel(pd));
+
 	// first we create a new tab
 	m_DialogID.push_back(IDD_TABDIALOG);
 	m_Dialogs.push_back(new PlayerTabDialog);
 	m_Dialogs[m_PageCount]->Create(m_DialogID[m_PageCount], GetParent());
 
-	// see if we should fill in the tab's skill list
-	if (!pd) {
-		// insert a blank tab
-		InsertItem(m_PageCount, "Player");
-	}
-	else {
-		// insert a new tab with the name
-		InsertItem(m_PageCount, CString(pd->name));
+	// insert a new tab with the name
+	InsertItem(m_PageCount, CString(pd.name));
+	m_Players[pd.name]=pdc;
 
-		// now fill in the skill table
-		static_cast<PlayerTabDialog*> (m_Dialogs[m_PageCount])->setSkillData(pd);
-	}
+	// now fill in the skill table
+	static_cast<PlayerTabDialog*> (m_Dialogs[m_PageCount])->setSkillData(pd);
 
 	// set this tab as our selection
 	SetCurSel(m_PageCount);
@@ -108,6 +119,31 @@ void PlayerNotebook::addPlayerTab(PlayerData *pd) {
 
 	// incremene the amount of pages we have
 	m_PageCount++;
+}
+
+// get a player data struct for a player
+PlayerData* PlayerNotebook::getPlayerData(CString name) {
+	return m_Players[name];
+}
+
+// return the name of the currently open tab
+CString PlayerNotebook::getCurrentTabName() {
+	CString str="";
+	int sel=GetCurSel();
+	if (sel==0)
+		str="RS Stat Tool";
+	else {
+		int i=0;
+		for (std::map<CString, PlayerData*>::iterator it=m_Players.begin(); 
+			 it!=m_Players.end(); ++it) {
+			if (i==sel) {
+				str=(*it).first;
+				break;
+			}
+			i++;
+		}
+	}
+	return str;
 }
 
 // close the current tab

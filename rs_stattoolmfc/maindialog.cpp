@@ -24,6 +24,7 @@
 #include "aboutdialog.h"
 #include "rs_stattoolmfc.h"
 #include "maindialog.h"
+#include "playerinfodialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -37,6 +38,7 @@ BEGIN_MESSAGE_MAP(MainDialog, CDialog)
 	ON_COMMAND(ID_FILE_QUIT, onFileQuit)
 	ON_COMMAND(ID_TOOLS_COMPARE, onToolsCompare)
 	ON_COMMAND(ID_HELP_ABOUT, onHelpAbout)
+	ON_COMMAND(ID_POPUP_VIEWINFO, onViewPlayerInfo)
 	ON_COMMAND(ID_POPUP_CLOSETAB, onTabsClose)
 	ON_MESSAGE(WM_RSTHREAD_STARTED, onThreadStarted)
 	ON_MESSAGE(WM_RSTHREAD_FINISHED, onThreadFinished)
@@ -143,6 +145,18 @@ void MainDialog::onHelpAbout() {
 	diag.DoModal();
 }
 
+// view player info handler for tab popup
+void MainDialog::onViewPlayerInfo() {
+	// first get the player data struct
+	PlayerData *pd=m_NB.getPlayerData(m_NB.getCurrentTabName());
+	if (pd) {
+		// display the info dialog
+		PlayerInfoDialog pid;
+		pid.setPlayerInfo(_T(pd->name), _T(pd->overallLvl), _T(pd->overallExp));
+		pid.DoModal();
+	}
+}
+
 // close handler for tab popup
 void MainDialog::onTabsClose() {
 	m_NB.closeCurrentTab();
@@ -201,7 +215,7 @@ LRESULT MainDialog::onThreadFinished(WPARAM wParam, LPARAM lParam) {
 		m_StatBar.SetPaneText(0, _T("Done"));
 
 		// add a player tab
-		m_NB.addPlayerTab(&pd);
+		m_NB.addPlayerTab(pd);
 	}
 	else
 		m_StatBar.SetPaneText(0, _T("** Player is not in the high scores **"));

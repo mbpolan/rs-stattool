@@ -17,56 +17,51 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-// rsparser.h: the core HTML and Network I/O class
+// playerinfodialog.cpp: implementation of PlayerInfoDialog class
 
-#ifndef RSPARSER_H
-#define RSPARSER_H
+#include "stdafx.h"
+#include "rs_stattoolmfc.h"
+#include "playerinfodialog.h"
 
-#include <curl/curl.h>
-#include "common.h"
-#include "playernotebook.h"
+IMPLEMENT_DYNAMIC(PlayerInfoDialog, CDialog)
 
-// rs html parser
-class RSParser {
-	public:
-		// struct used in thread func arguement
-		struct CurlStruct {
-			HWND diag;
-			RSParser *parser; // this
-			CString pname;
-		};
+// msg map
+BEGIN_MESSAGE_MAP(PlayerInfoDialog, CDialog)
+END_MESSAGE_MAP()
 
-		// constructor
-		RSParser();
+// constructor
+PlayerInfoDialog::PlayerInfoDialog(CWnd* pParent /*=NULL*/)
+	: CDialog(PlayerInfoDialog::IDD, pParent) {
+}
 
-		// get the player's high scores data
-		void getPlayerData(const CString &name, CDialog *md);
+// destructor
+PlayerInfoDialog::~PlayerInfoDialog() {
+}
 
-		// calculate a player's total exp
-		static int calculateTotalExp(const PlayerData &pd);
+// set the player info
+void PlayerInfoDialog::setPlayerInfo(const CString &name, const CString &level, const CString &exp) {
+	// set the labels for dialog initialize later on
+	m_Name=name;
+	m_Level=level;
+	m_Exp=exp;
+}
 
-		// calculate a player's total level
-		static int calculateTotalLevel(const PlayerData &pd);
+// ddx/ddv support
+void PlayerInfoDialog::DoDataExchange(CDataExchange* pDX) {
+	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_PPLAYERNAMESTATIC, m_PlayerNameEdit);
+	DDX_Control(pDX, IDC_PTOTALLEVELSTATIC, m_TotalLevelEdit);
+	DDX_Control(pDX, IDC_PTOTALEXPSTATIC, m_TotalExpEdit);
+}
 
-		// validate a player's name
-		static CString validateName(const CString &name);
+// override for OnInitDialog
+BOOL PlayerInfoDialog::OnInitDialog() {
+	CDialog::OnInitDialog();
 
-		// parse html data
-		static PlayerData parseHTML(char *data, bool *ok);
+	// update the labels
+	m_PlayerNameEdit.SetWindowText(m_Name);
+	m_TotalLevelEdit.SetWindowText(m_Level);
+	m_TotalExpEdit.SetWindowText(m_Exp);
 
-		// curl data from previous session
-		MemChunk m_Chunk;
-		TransferData m_Data;
-		
-	protected:
-		// thread function for network i/o
-		static UINT __cdecl threadGetPlayerData(LPVOID pParam);
-
-		// writing function for curl write-data callback
-		static size_t curlWriteFunc(void *ptr, size_t size, size_t nmemb, void *userp);
-
-		// the worker thread
-		CWinThread *m_Thread;
-};
-
-#endif
+	return TRUE;
+}

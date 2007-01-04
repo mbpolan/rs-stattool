@@ -17,56 +17,48 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-// rsparser.h: the core HTML and Network I/O class
+// playerinfodialog.h: the PlayerInfoDialog class
 
-#ifndef RSPARSER_H
-#define RSPARSER_H
+#ifndef PLAYERINFODIALOG_H
+#define PLAYERINFODIALOG_H
 
-#include <curl/curl.h>
-#include "common.h"
-#include "playernotebook.h"
+#include "afxwin.h"
+#include "resource.h"
 
-// rs html parser
-class RSParser {
+// dialog for displaying a player's info
+class PlayerInfoDialog : public CDialog{
+	DECLARE_DYNAMIC(PlayerInfoDialog)
+
 	public:
-		// struct used in thread func arguement
-		struct CurlStruct {
-			HWND diag;
-			RSParser *parser; // this
-			CString pname;
-		};
-
 		// constructor
-		RSParser();
+		PlayerInfoDialog(CWnd* pParent = NULL);
 
-		// get the player's high scores data
-		void getPlayerData(const CString &name, CDialog *md);
+		// destructor
+		virtual ~PlayerInfoDialog();
 
-		// calculate a player's total exp
-		static int calculateTotalExp(const PlayerData &pd);
+		// set the player info
+		void setPlayerInfo(const CString &name, const CString &level, const CString &exp);
 
-		// calculate a player's total level
-		static int calculateTotalLevel(const PlayerData &pd);
+		// Dialog Data
+		enum { IDD = IDD_PLAYERINFODIALOG };
 
-		// validate a player's name
-		static CString validateName(const CString &name);
-
-		// parse html data
-		static PlayerData parseHTML(char *data, bool *ok);
-
-		// curl data from previous session
-		MemChunk m_Chunk;
-		TransferData m_Data;
-		
 	protected:
-		// thread function for network i/o
-		static UINT __cdecl threadGetPlayerData(LPVOID pParam);
+		virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
-		// writing function for curl write-data callback
-		static size_t curlWriteFunc(void *ptr, size_t size, size_t nmemb, void *userp);
+		// override for OnInitDialog
+		virtual BOOL OnInitDialog();
 
-		// the worker thread
-		CWinThread *m_Thread;
+		DECLARE_MESSAGE_MAP()
+
+		// widgets
+		CStatic m_PlayerNameEdit;
+		CStatic m_TotalLevelEdit;
+		CStatic m_TotalExpEdit;
+
+		// strings
+		CString m_Name;
+		CString m_Level;
+		CString m_Exp;
 };
 
 #endif

@@ -51,8 +51,8 @@ BEGIN_MESSAGE_MAP(PlayerTabDialog, CDialog)
 END_MESSAGE_MAP()
 
 // constructor
-PlayerTabDialog::PlayerTabDialog(CWnd* pParent /*=NULL*/)
-	: CDialog(PlayerTabDialog::IDD, pParent) {
+PlayerTabDialog::PlayerTabDialog(CWnd* pParent): 
+		CDialog(PlayerTabDialog::IDD, pParent) {
 }
 
 // destructor
@@ -72,10 +72,10 @@ void PlayerTabDialog::DoDataExchange(CDataExchange* pDX) {
 }
 
 // fill in the skill table
-void PlayerTabDialog::setSkillData(PlayerData *pd) {
+void PlayerTabDialog::setSkillData(PlayerData pd) {
 	// iterate over skills
 	for (int i=0; i<SKILL_COUNT; i++) {
-		SkillData s=pd->skills[i];
+		SkillData s=pd.skills[i];
 
 		// insert the initial item
 		int index=m_SkillList.InsertItem(i, s.name);

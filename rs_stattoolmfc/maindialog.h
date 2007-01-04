@@ -51,6 +51,7 @@ class MainDialog: public CDialog {
 		afx_msg void onFileQuit();
 		afx_msg void onToolsCompare();
 		afx_msg void onHelpAbout();
+		afx_msg void onViewPlayerInfo();
 		afx_msg void onTabsClose();
 		afx_msg void onGoButtonClicked();
 		afx_msg void onTabSelChange(NMHDR *pNMHDR, LRESULT *pResult);

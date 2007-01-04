@@ -43,6 +43,38 @@ void RSParser::getPlayerData(const CString &name, CDialog *md) {
 	m_Thread=AfxBeginThread(threadGetPlayerData, (LPVOID) cs);
 }
 
+// calculate a player's total exp
+int RSParser::calculateTotalExp(const PlayerData &pd) {
+	int totalExp=0;
+
+	// go over each skill
+	for (int i=0; i<SKILL_COUNT; i++) {
+		SkillData s=pd.skills[i];
+
+		// convert the string exp to an integer
+		int texp=Utils::cstringToInt(s.xp);
+		totalExp+=texp;
+	}
+
+	return totalExp;
+}
+
+// calculate a player's total level
+int RSParser::calculateTotalLevel(const PlayerData &pd) {
+	int totalLvl=0;
+
+	// go over each skill
+	for (int i=0; i<SKILL_COUNT; i++) {
+		SkillData s=pd.skills[i];
+
+		// convert the string exp to an integer
+		int tlvl=Utils::cstringToInt(s.level);
+		totalLvl+=tlvl;
+	}
+
+	return totalLvl;
+}
+
 // validate a player's name
 CString RSParser::validateName(const CString &name) {
 	CString ret=name;
@@ -90,7 +122,7 @@ PlayerData RSParser::parseHTML(char *data, bool *ok) {
 	int npos1=html.Find("Personal scores for ");
 	html.Delete(0, npos1+20);
 	npos1=html.Find("</b>");
-	player.name=html.Mid(0, npos1);
+	player.name=CString(html.Mid(0, npos1));
 
 	// iterate over skills
 	for (int i=0; i<SKILL_COUNT; i++) {
@@ -106,8 +138,8 @@ PlayerData RSParser::parseHTML(char *data, bool *ok) {
 			// erase string up to this point
 			html.Delete(0, pos);
 			
-			// 28 bytes+skillLength to rank
-			html.Delete(0, skillLength+28+1);
+			// 29 bytes+skillLength to rank
+			html.Delete(0, skillLength+29);
 			
 			// find </td> tag
 			int tpos=html.Find("</td>");
@@ -149,8 +181,9 @@ PlayerData RSParser::parseHTML(char *data, bool *ok) {
 		}
 		
 		else {
+			// couldn't find a skill?
 			char buf[256];
-			sprintf(buf, "Unable to find skill %s", skills[i]);
+			sprintf(buf, "Unable to find skill %s in data!", skills[i]);
 			AfxMessageBox(buf, MB_OK);
 		}
 	}

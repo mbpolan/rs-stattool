@@ -199,6 +199,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\playerinfodialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\playernotebook.cpp"
 				>
 			</File>
@@ -254,6 +258,10 @@
 			</File>
 			<File
 				RelativePath=".\maindialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\playerinfodialog.h"
 				>
 			</File>
 			<File
