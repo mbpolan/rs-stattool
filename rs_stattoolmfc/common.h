@@ -39,12 +39,6 @@
 // total amount of skills
 #define SKILL_COUNT	23
 
-// tree view colors
-#define COMPARE_COLOR_LOW	"#de4040"
-#define COMPARE_COLOR_HI	"#5ade40"
-#define COMPARE_COLOR_EVEN	"#e8e773"
-#define COMPARE_COLOR_GRAY	"#778899"
-
 // compare dialog dimensions
 #define COMPARE_DIALOG_WIDTH	520
 #define COMPARE_DIALOG_HEIGHT	460

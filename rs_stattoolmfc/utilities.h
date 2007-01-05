@@ -31,6 +31,9 @@ void* alloc(void *ptr, size_t size);
 // convert a CString to an int
 int cstringToInt(const CString &str);
 
+// convert a CString to a long
+long cstringToLong(const CString &str);
+
 // convert an int to a CString
 CString intToCString(int a);
 

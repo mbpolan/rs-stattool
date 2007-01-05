@@ -1,6 +1,3 @@
-// comparedialog.cpp : implementation file
-//
-
 /***************************************************************************
  *   Copyright (C) 2006 by Mike Polan                                      *
  *   kanadakid@gmail.com                                                   *
@@ -25,6 +22,7 @@
 #include "stdafx.h"
 #include "rs_stattoolmfc.h"
 #include "comparedialog.h"
+#include "utilities.h"
 
 IMPLEMENT_DYNAMIC(CompareSelectDialog, CDialog)
 
@@ -120,6 +118,7 @@ IMPLEMENT_DYNAMIC(CompareDialog, CDialog)
 
 // msg map
 BEGIN_MESSAGE_MAP(CompareDialog, CDialog)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_COMPARELIST, onCustomDrawList)
 END_MESSAGE_MAP()
 
 // constructor
@@ -166,6 +165,30 @@ BOOL CompareDialog::OnInitDialog() {
 		m_CompareList.SetItemText(index, 5, s2[i].rank);
 		m_CompareList.SetItemText(index, 6, s2[i].level);
 		m_CompareList.SetItemText(index, 7, s2[i].xp);
+
+		// compare the exp points of both players
+		long exp1=Utils::cstringToLong(s1[i].xp);
+		long exp2=Utils::cstringToLong(s2[i].xp);
+
+		// if any of the two skills does not rank, assign -1
+		if (s1[i].xp.Find("-")!=-1 || s2[i].xp.Find("-")!=-1)
+			m_HigherPlayer[i]=-1;
+
+		// if player 1 has higher exp, assign 0
+		else if (exp1>exp2)
+			m_HigherPlayer[i]=0;
+
+		// if player 2 has more, assign 1
+		else if (exp2>exp1)
+			m_HigherPlayer[i]=1;
+
+		// if they're both equal, assign 2
+		else if (exp1==exp2)
+			m_HigherPlayer[i]=2;
+
+		// set this data with the item for use later
+		// in custom drawing for m_CompareList
+		m_CompareList.SetItemData(i, (DWORD_PTR) &m_HigherPlayer[i]);
 	}
 
 	return TRUE;
@@ -187,4 +210,40 @@ void CompareDialog::DoDataExchange(CDataExchange* pDX) {
 	m_CompareList.InsertColumn(5, _T("P2 Rank"), LVCFMT_LEFT, 75);
 	m_CompareList.InsertColumn(6, _T("P2 Level"), LVCFMT_LEFT, 75);
 	m_CompareList.InsertColumn(7, _T("P2 Exp"), LVCFMT_LEFT, 75);
+}
+
+// custom draw override for list view to draw colored rows
+void CompareDialog::onCustomDrawList(NMHDR* pNMHDR, LRESULT* pResult) {
+	NMLVCUSTOMDRAW *pLV=reinterpret_cast<NMLVCUSTOMDRAW*> (pNMHDR);
+	*pResult=CDRF_DODEFAULT;
+
+	// request notifications for item drawing
+	if (pLV->nmcd.dwDrawStage==CDDS_PREPAINT)
+		*pResult=CDRF_NOTIFYITEMDRAW;
+
+	// request notifications for subitem drawing
+	else if (pLV->nmcd.dwDrawStage==CDDS_ITEMPREPAINT)
+		*pResult=CDRF_NOTIFYSUBITEMDRAW;
+
+	// this is where we do the drawing
+	else if (pLV->nmcd.dwDrawStage==(CDDS_ITEMPREPAINT | CDDS_SUBITEM)) {
+		COLORREF clr;
+
+		// get the item data
+		int higherPlayer=*(int*) pLV->nmcd.lItemlParam;
+
+		// see what color to set
+		switch(higherPlayer) {
+			default:
+			case -1: clr=RGB(192, 192, 192); break;
+			case 0: clr=RGB(128, 255, 128); break;
+			case 1: clr=RGB(255, 128, 128); break;
+			case 2: clr=RGB(255, 255, 128); break;
+		}
+
+		// set the color
+		pLV->clrTextBk=clr;
+
+		*pResult=CDRF_DODEFAULT;
+	}
 }

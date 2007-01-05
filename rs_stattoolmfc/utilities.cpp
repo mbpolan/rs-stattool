@@ -51,6 +51,23 @@ int Utils::cstringToInt(const CString &str) {
 	return atoi((const char*) tmp);
 }
 
+// convert a CString to a long
+long Utils::cstringToLong(const CString &str) {
+	CString tmp;
+
+	if (str=="-")
+		return -1;
+
+	// clear out any unnecessary characters
+	for (int i=0; i<str.GetLength(); i++) {
+		if (str[i]!=',' && str[i]!=' ')
+			tmp+=str[i];
+	}
+
+	// convert to long
+	return atol((const char*) tmp);
+}
+
 // convert an int to a CString
 CString Utils::intToCString(int a) {
 	std::stringstream ss;

@@ -48,6 +48,8 @@ class MainDialog: public CDialog {
 		virtual BOOL OnInitDialog();
 		afx_msg void OnPaint();
 		afx_msg HCURSOR OnQueryDragIcon();
+		afx_msg void OnOK() { };
+		afx_msg void OnClose() { };
 		afx_msg void onFileQuit();
 		afx_msg void onToolsCompare();
 		afx_msg void onHelpAbout();

@@ -99,6 +99,9 @@ class CompareDialog: public CDialog {
 		virtual void DoDataExchange(CDataExchange* pDX);
 	
 		DECLARE_MESSAGE_MAP()
+
+		// msg map handlers
+		afx_msg void onCustomDrawList(NMHDR* pNMHDR, LRESULT* pResult);
 	
 		// widgets
 		CStatic m_Player1Static;
@@ -107,6 +110,7 @@ class CompareDialog: public CDialog {
 
 		// player data
 		PlayerData *m_Players[2];
+		int m_HigherPlayer[SKILL_COUNT];
 };
 
 #endif
