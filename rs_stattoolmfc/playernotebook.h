@@ -44,6 +44,9 @@ class PlayerNotebook: public CTabCtrl {
 
 		// add a new player tab
 		void addPlayerTab(PlayerData pd);
+
+		// return a vector of all players
+		std::vector<PlayerData*> getPlayers();
 		
 		// get a player data struct for a player
 		PlayerData* getPlayerData(CString name);

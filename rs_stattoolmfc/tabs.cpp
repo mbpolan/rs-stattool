@@ -67,8 +67,8 @@ void PlayerTabDialog::DoDataExchange(CDataExchange* pDX) {
 	// add columns
 	m_SkillList.InsertColumn(0, _T("Skill"), LVCFMT_LEFT, 75);
 	m_SkillList.InsertColumn(1, _T("Rank"), LVCFMT_LEFT, 75);
-	m_SkillList.InsertColumn(1, _T("Level"), LVCFMT_LEFT, 75);
-	m_SkillList.InsertColumn(1, _T("Exp"), LVCFMT_LEFT, 75);
+	m_SkillList.InsertColumn(2, _T("Level"), LVCFMT_LEFT, 75);
+	m_SkillList.InsertColumn(3, _T("Exp"), LVCFMT_LEFT, 75);
 }
 
 // fill in the skill table
@@ -84,8 +84,8 @@ void PlayerTabDialog::setSkillData(PlayerData pd) {
 		int index=m_SkillList.InsertItem(i, s.name);
 
 		// and fill in the rest of the data
-		m_SkillList.SetItemText(index, 1, s.xp);
+		m_SkillList.SetItemText(index, 1, s.rank);
 		m_SkillList.SetItemText(index, 2, s.level);
-		m_SkillList.SetItemText(index, 3, s.rank);
+		m_SkillList.SetItemText(index, 3, s.xp);
 	}
 }

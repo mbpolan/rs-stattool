@@ -120,6 +120,17 @@ void PlayerNotebook::addPlayerTab(PlayerData pd) {
 	m_PageCount++;
 }
 
+// return a vector of all players
+std::vector<PlayerData*> PlayerNotebook::getPlayers() {
+	std::vector<PlayerData*> vec;
+	for (std::map<CString, PlayerData*>::iterator it=m_Players.begin();
+		 it!=m_Players.end(); ++it) {
+			 if ((*it).second)
+				 vec.push_back((*it).second);
+	}
+	return vec;
+}
+
 // get a player data struct for a player
 PlayerData* PlayerNotebook::getPlayerData(CString name) {
 	return m_Players[name];
@@ -162,9 +173,6 @@ void PlayerNotebook::closeCurrentTab() {
 		}
 	}
 
-	// otherwise, close the tab
-	DeleteItem(sel);
-
 	// delete the dialog
 	int i=0;
 	for (std::vector<CDialog*>::iterator it=m_Dialogs.begin(); it!=m_Dialogs.end(); ++it) {
@@ -181,7 +189,10 @@ void PlayerNotebook::closeCurrentTab() {
 	if (m_PageCount<0)
 		m_PageCount=0;
 
-	// set the selection to 0
-//	SetCurSel(0);
-//	activateTabs();
+	// set the selection to the previous tab
+	SetCurSel(sel-1);
+	activateTabs();
+
+	// close the tab
+	DeleteItem(sel);
 }

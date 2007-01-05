@@ -21,6 +21,7 @@
 
 #include "stdafx.h"
 #include "common.h"
+#include "comparedialog.h"
 #include "aboutdialog.h"
 #include "rs_stattoolmfc.h"
 #include "maindialog.h"
@@ -137,6 +138,30 @@ void MainDialog::onFileQuit() {
 
 // tools menu compare handler
 void MainDialog::onToolsCompare() {
+	// first, prepare the selection dialog
+	CompareSelectDialog sdiag;
+	if (!sdiag.setPlayers(m_NB.getPlayers()))
+		return;
+
+	// run it now
+	if (sdiag.DoModal()==IDOK) {
+		// get our selections
+		CString p1, p2;
+		sdiag.getSelectedPlayers(p1, p2);
+
+		// get player data
+		PlayerData *pd1=m_NB.getPlayerData(p1);
+		PlayerData *pd2=m_NB.getPlayerData(p2);
+
+		// make sure these are valid
+		if (!pd1 || !pd2)
+			return;
+
+		// run the compare dialog itself now
+		CompareDialog cdiag;
+		cdiag.setCompareData(pd1, pd2);
+		cdiag.DoModal();
+	}
 }
 
 // help menu about handler

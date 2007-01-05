@@ -195,6 +195,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\comparedialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\maindialog.cpp"
 				>
 			</File>
@@ -254,6 +258,10 @@
 			</File>
 			<File
 				RelativePath=".\common.h"
+				>
+			</File>
+			<File
+				RelativePath=".\comparedialog.h"
 				>
 			</File>
 			<File
