@@ -102,6 +102,13 @@ void MainWindow::on_data_ready(int code, char *data) {
 
 // compare slot handler
 void MainWindow::on_compare_players() {
+	// first check if there are at least two player stats downloaded
+	if (m_NB->get_map().size()<2) {
+		Gtk::MessageDialog md(*this, "You must have at least two players' stats downloaded.");
+		md.run();
+		return;
+	}
+	
 	// build dialog
 	Gtk::Dialog d;
 	Gtk::VBox *vb=d.get_vbox();
@@ -153,13 +160,6 @@ void MainWindow::on_compare_players() {
 		// check text
 		Glib::ustring player1=p1cb->get_active_text();
 		Glib::ustring player2=p2cb->get_active_text();
-		if (player1.empty() || player2.empty()) {
-			// display error
-			Gtk::MessageDialog md(*this, "You must choose both players", false,
-					       Gtk::MESSAGE_WARNING);
-			md.run();
-			return;
-		}
 		
 		// get both players' data
 		PlayerData p1=m_NB->get_player_data(player1);
@@ -279,19 +279,9 @@ void MainWindow::construct() {
 	"		</menu>"
 	"</menubar>"
 	"</ui>";
-		
-	// catch exceptions
-	try {
-		// try to add the string
-		m_UI->add_ui_from_string(ui);
-	}
 	
-	// catch exceptions
-	catch(const Glib::Error &ex) {
-		Gtk::MessageDialog md(*this, "Unable to create UI from string.",
-				    Gtk::MESSAGE_ERROR);
-		md.run();
-	}
+	// try to add the string
+	m_UI->add_ui_from_string(ui);
 	
 	// grab the menubar widget
 	Gtk::Widget *menuBar=m_UI->get_widget("/MenuBar");
@@ -343,6 +333,7 @@ void MainWindow::construct() {
 	// pack the widgets
 	phb->pack_start(*m_StatusBar);
 	
+	shb->set_border_width(10);
 	shb->pack_start(*m_SearchLabel, Gtk::PACK_SHRINK);
 	shb->pack_start(*m_PlayerEntry);
 	shb->pack_start(*m_SearchButton, Gtk::PACK_SHRINK);
