@@ -44,11 +44,7 @@ void RSParser::get_player_data(const Glib::ustring &name) {
 };
 
 // parse html data
-PlayerData RSParser::parse_html(char *data, bool *ok) {
-	FILE *f=fopen("debug.html", "w");
-	fputs(data, f);
-	fclose(f);
-	
+PlayerData RSParser::parse_html(char *data, bool *ok) {	
 	PlayerData player;
 	
 	// form a ustring from data
