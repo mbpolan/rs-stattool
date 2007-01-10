@@ -73,11 +73,11 @@ IDR_MAINFRAME           ICON                    "res\\rs_stattoolmfc.ico"
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 235, 55
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About rs_stattoolmfc"
+CAPTION "About RS StatTool"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "rs_stattoolmfc Version 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "RuneScape Stat Tool Version 3.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
     LTEXT           "Copyright (C) 2006",IDC_STATIC,40,25,119,8
     DEFPUSHBUTTON   "OK",IDOK,178,7,50,16,WS_GROUP
 END
@@ -98,12 +98,12 @@ IDD_TABINITIALDIALOG DIALOGEX 0, 0, 186, 90
 STYLE DS_SYSMODAL | DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    LTEXT           "RuneScape Stat Tool",IDC_STATIC,7,7,172,9
-    LTEXT           "You can search players by typing in their names and then pressing the Go button. This will download the player stats from the high scores page and display it in a new tab.",IDC_STATIC,7,22,172,61
+    CTEXT           "RuneScape Stat Tool",IDC_INITIALTITLESTATIC,7,7,172,17
+    LTEXT           "You can search a player by typing his or her name above and clicking 'Go.' If that player is listed in the RuneScape high scores, then his or her stats will be displayed.",IDC_STATIC,7,28,172,55
 END
 
 IDD_TABDIALOG DIALOGEX 0, 0, 245, 123
-STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE | WS_SYSMENU
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     CONTROL         "",IDC_SKILLTABLE,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,231,109
@@ -173,6 +173,8 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
+            VALUE "Comments", "RuneScape (tm) player stat viewer"
+            VALUE "CompanyName", "Mike Polan"
             VALUE "FileDescription", "RuneScape(tm) Stat Viewer"
             VALUE "FileVersion", "3.0.0.1"
             VALUE "InternalName", "rs_stattoolmfc.exe"
@@ -282,6 +284,7 @@ BEGIN
     POPUP "Popup"
     BEGIN
         MENUITEM "View Info",                   ID_POPUP_VIEWINFO
+        MENUITEM "Refresh",                     ID_POPUP_REFRESH
         MENUITEM "Close Tab",                   ID_POPUP_CLOSETAB
     END
 END
@@ -294,7 +297,7 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDS_ABOUTBOX            "&About rs_stattoolmfc..."
+    IDS_ABOUTBOX            "&About RS StatTool..."
     IDS_INDICATOR_STATUS    "Ready"
 END
 

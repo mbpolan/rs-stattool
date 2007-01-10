@@ -40,6 +40,7 @@ BEGIN_MESSAGE_MAP(MainDialog, CDialog)
 	ON_COMMAND(ID_TOOLS_COMPARE, onToolsCompare)
 	ON_COMMAND(ID_HELP_ABOUT, onHelpAbout)
 	ON_COMMAND(ID_POPUP_VIEWINFO, onViewPlayerInfo)
+	ON_COMMAND(ID_POPUP_REFRESH, onRefresh)
 	ON_COMMAND(ID_POPUP_CLOSETAB, onTabsClose)
 	ON_MESSAGE(WM_RSTHREAD_STARTED, onThreadStarted)
 	ON_MESSAGE(WM_RSTHREAD_FINISHED, onThreadFinished)
@@ -204,6 +205,19 @@ void MainDialog::onGoButtonClicked() {
 
 	// display message
 	m_StatBar.SetPaneText(0, _T("Beginning transfer..."), true);
+}
+
+// refresh popup handler
+void MainDialog::onRefresh() {
+	// get the current tab's name
+	CString name=m_NB.getCurrentTabName();
+
+	// make sure this is a player tab
+	if (name=="RS Stat Tool")
+		return;
+
+	// get the new data
+	m_Parser.getPlayerData(name, this);
 }
 
 // right click on tab handler

@@ -96,6 +96,35 @@ void PlayerNotebook::addPlayerTab(PlayerData pd) {
 	// copy the player data
 	PlayerData *pdc=new PlayerData(pd);
 
+	// see if a player with this name already exists
+	int i=1; // start at 1 since first tab is not mapped
+	for (std::map<CString, PlayerData*>::iterator it=m_Players.begin(); it!=m_Players.end(); ++it) {
+		// bring the names to lowercase
+		CString s1=(*it).first;
+		s1=s1.MakeLower();
+		CString s2=pd.name;
+		s2=s2.MakeLower();
+
+		// and compare them
+		if (s1==s2) {
+			CDialog *diag=m_Dialogs[i];
+			if (diag) {
+				// cast the dialog appropriately and update skill data
+				PlayerTabDialog *tdiag=static_cast<PlayerTabDialog*> (diag);
+				if (tdiag) {
+					tdiag->setSkillData(pd);
+
+					// delete old data struct and replace it
+					delete m_Players[pd.name];
+					m_Players[pd.name]=pdc;
+				}
+			}
+
+			return;
+		}
+		i++;
+	}
+
 	// calculate the total level and exp
 	pdc->overallExp=Utils::intToCString(RSParser::calculateTotalExp(pd));
 	pdc->overallLvl=Utils::intToCString(RSParser::calculateTotalLevel(pd));

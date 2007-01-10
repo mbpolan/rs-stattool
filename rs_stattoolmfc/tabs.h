@@ -22,6 +22,7 @@
 #pragma once
 #include "afxcmn.h"
 #include "common.h"
+#include "afxwin.h"
 
 // the initial tab for PlayerNotebook
 class InitialTabDialog: public CDialog{
@@ -30,15 +31,21 @@ class InitialTabDialog: public CDialog{
 	public:
 		// constructor
 		InitialTabDialog(CWnd* pParent = NULL);
+
+		// destructor
 		virtual ~InitialTabDialog();
 	
 		// Dialog Data
 		enum { IDD = IDD_TABINITIALDIALOG };
 	
 	protected:
-		virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+		// DDX/DDV support
+		virtual void DoDataExchange(CDataExchange* pDX);
 
 		DECLARE_MESSAGE_MAP()
+		
+		// widgets
+		CStatic m_TitleStatic;
 };
 
 // tab used for player tabs
@@ -46,7 +53,10 @@ class PlayerTabDialog: public CDialog {
 	DECLARE_DYNAMIC(PlayerTabDialog)
 
 	public:
-		PlayerTabDialog(CWnd* pParent = NULL);   // standard constructor
+		// constructor
+		PlayerTabDialog(CWnd* pParent = NULL);
+
+		// destructor
 		virtual ~PlayerTabDialog();
 
 		// fill in the skill table

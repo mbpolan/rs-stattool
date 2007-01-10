@@ -40,6 +40,16 @@ InitialTabDialog::~InitialTabDialog() {
 
 void InitialTabDialog::DoDataExchange(CDataExchange* pDX) {
 	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_INITIALTITLESTATIC, m_TitleStatic);
+
+	// create a font
+	CFont *pfont=new CFont;
+	pfont->CreateFont(22, 0, 0, 0, FW_BOLD, false, false, false, 0, OUT_DEFAULT_PRECIS,
+					  CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_ROMAN,
+					  "Times New Roman");
+	
+	// set the label text
+	m_TitleStatic.SetFont(pfont, true);
 }
 
 /*************************************************************************************/

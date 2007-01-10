@@ -34,19 +34,21 @@
 #define IDC_COMPAREPLAYERSTATIC         1020
 #define IDC_COMBO1                      1021
 #define IDC_COMBO2                      1022
+#define IDC_INITIALTITLESTATIC          1023
 #define ID_FILE_QUIT                    32771
 #define ID_TOOLS_COMPARE                32772
 #define ID_HELP_ABOUT                   32773
 #define ID_POPUP_CLOSETAB               32774
 #define ID_POPUP_VIEWINFO               32775
+#define ID_POPUP_REFRESH                32776
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        136
-#define _APS_NEXT_COMMAND_VALUE         32776
-#define _APS_NEXT_CONTROL_VALUE         1023
+#define _APS_NEXT_COMMAND_VALUE         32777
+#define _APS_NEXT_CONTROL_VALUE         1024
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
