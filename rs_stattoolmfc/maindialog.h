@@ -76,4 +76,6 @@ class MainDialog: public CDialog {
 
 		// parser for html
 		RSParser m_Parser;
+public:
+	afx_msg void onAcceleratorQuit();
 };

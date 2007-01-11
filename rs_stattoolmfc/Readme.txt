@@ -1,0 +1,66 @@
+===================
+RuneScape Stat Tool
+===================
+Release date: January 10, 2007
+Version: 0.4
+
+Official homepage: http://rs-stattool.sf.net
+
+------------------
+Table of Contents
+------------------
+1. Introduction
+2. What's New?
+3. Installation
+4. Usage
+5. License
+6. Authors
+-----------------
+
+~~~~~~~~~~~~~~~~~
+1. Introduction
+~~~~~~~~~~~~~~~~~
+This is a simple tool that fetches a RuneScape player's high scores 
+stats and allows you to save them, compare users, etc.
+
+~~~~~~~~~~~~~~~~~
+2. What's New?
+~~~~~~~~~~~~~~~~~
+Following the Hunter skill update, the layout of the personal high scores
+page was changed, at least on the HTML code part. The parser has been updated to
+work with the new changes.
+
+This is also the first port to Windows using MFC.
+
+~~~~~~~~~~~~~~~~~
+3. Installation
+~~~~~~~~~~~~~~~~~
+No installation is required. Simply run the executable in the main folder.
+
+~~~~~~~~~~~~~~~~~
+4. Usage
+~~~~~~~~~~~~~~~~~
+At this point, the app is very simple to use. Basically, you just type
+in the desired player's name in the text box. Once you feel confident,
+click the Go button, and the stats will be downloaded.
+
+You can check the progress by checking the status bar on the bottom. Any
+errors will also be displayed.
+
+Additionally, you can compare the skills of two users by going to
+the Tools menu and selecting Compare. Select the two players to
+compare and click OK. The skills will be high-lighted in one of four colors:
+-Green means the first player has the higher skill
+-Red means the second player has the higher skill
+-Yellow means both players have an equal level in the skill (very, very unlikely, but possible)
+-Gray means one or both players' skills are not ranked
+
+~~~~~~~~~~~~~~~~~
+5. License
+~~~~~~~~~~~~~~~~~
+This software is licensed under the terms of the GNU GPL License.
+
+~~~~~~~~~~~~~~~~~
+6. Authors
+~~~~~~~~~~~~~~~~~
+Lead developer: Mike Polan (kanadakid@gmail.com)
