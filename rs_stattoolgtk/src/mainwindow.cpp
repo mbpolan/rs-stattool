@@ -42,6 +42,9 @@ MainWindow::MainWindow():
 	// window title
 	set_title("RS Stat Tool");
 	
+	// set the minimum width
+	set_size_request(400, 320);
+	
 	// build the ui
 	construct();
 };
@@ -212,7 +215,7 @@ void MainWindow::construct() {
 	m_AboutDialog->set_name("RuneScape Stat Tool");
 	
 	// version
-	m_AboutDialog->set_version("0.3");
+	m_AboutDialog->set_version("0.4");
 	
 	// comments
 	m_AboutDialog->set_comments("This is a simple tool for fetching "

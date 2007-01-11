@@ -1,8 +1,8 @@
 ===================
 RuneScape Stat Tool
 ===================
-Release date: December 7, 2006
-Version: 0.3
+Release date: January 10, 2007
+Version: 0.4
 
 Official homepage: http://rs-stattool.sf.net
 
@@ -29,6 +29,10 @@ stats and allows you to save them, compare users, etc.
 Following the Hunter skill update, the layout of the personal high scores
 page was changed, at least on the HTML code part. The parser has been updated to
 work with the new changes.
+
+This version has a slightly changed GUI layout to match that of the
+new Windows MFC port. This version was released alongside the Windows
+version to reduce confusion.
 
 ~~~~~~~~~~~~~~~~~
 3. Installation
