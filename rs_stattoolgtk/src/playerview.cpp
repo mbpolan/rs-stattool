@@ -39,6 +39,8 @@ PlayerView::PlayerView() {
 	// add items
 	list.push_back(Gtk::Menu_Helpers::MenuElem("_View Info",
 		       sigc::mem_fun(*this, &PlayerView::on_list_info)));
+	list.push_back(Gtk::Menu_Helpers::MenuElem("_Save Stats",
+		       sigc::mem_fun(*this, &PlayerView::on_list_save_stats)));
 	list.push_back(Gtk::Menu_Helpers::MenuElem("_Refresh", 
 		       sigc::mem_fun(*this, &PlayerView::on_list_refresh)));
 	list.push_back(Gtk::Menu_Helpers::MenuElem("_Close",
@@ -181,6 +183,23 @@ void PlayerView::on_list_info() {
 	// display dialog
 	m_InfoDialog->set_player(player);
 	m_InfoDialog->run();
+};
+
+// save player stats
+void PlayerView::on_list_save_stats() {
+	if (!current_page_is_player())
+		return;
+	
+	// get the current player
+	int index=get_current_page();
+	Gtk::Widget *w=get_nth_page(index);
+	Glib::ustring name=get_tab_label_text(*w);
+	
+	// get player struct
+	PlayerData player=get_player_data(name);
+	
+	// emit save signal
+	signal_save_stats_request.emit(player);
 };
 
 // refresh the view

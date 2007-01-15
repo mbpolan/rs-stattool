@@ -32,6 +32,8 @@
 
 // project includes
 #include "comparedialog.h"
+#include "dialogs.h"
+#include "io.h"
 #include "mainwindow.h"
 #include "playerview.h"
 #include "rsparser.h"
@@ -60,6 +62,12 @@ MainWindow::~MainWindow() {
 // search button click handler
 void MainWindow::on_search_button_clicked() {
 	// connect online and get the html data
+	m_Parser->get_player_data(m_PlayerEntry->get_text());
+};
+
+// refresh player stats button
+void MainWindow::on_refresh_player(const Glib::ustring &name) {
+	// connect and get the updated data
 	m_Parser->get_player_data(m_PlayerEntry->get_text());
 };
 
@@ -101,6 +109,30 @@ void MainWindow::on_data_ready(int code, char *data) {
 	
 	// enable search button
 	m_SearchButton->set_sensitive(true);
+};
+
+// save player stats handler
+void MainWindow::on_save_player_stats(PlayerData &pd) {
+	// run save options dialog
+	SaveDialog sdiag;
+	if (sdiag.run()) {
+		// get save struct
+		struct SaveDialog::SaveOps sp=sdiag.get_save_ops();
+		
+		// check for extension
+		Glib::ustring ext=sp.path.substr(sp.path.size()-4, sp.path.size()-1);
+		ext.lowercase();
+		if (ext!=".rsp")
+			sp.path+=".rsp";
+		
+		// ask the io handler to save this player's stats
+		if (!IOHandler::save_player_stats(sp.path, pd, sp.timestamp)) {
+			Gtk::MessageDialog md(*this, "Unable to save: an unknown error occurred.");
+			md.run();
+		}
+		
+	}
+	sdiag.hide();
 };
 
 // compare slot handler
@@ -182,6 +214,28 @@ void MainWindow::on_about() {
 	m_AboutDialog->run();
 };
 
+// open player stats handler
+void MainWindow::on_open() {
+	// run file chooser dialog
+	Gtk::FileChooserDialog fcd(*this, "Open Saved Player Stats", Gtk::FILE_CHOOSER_ACTION_OPEN);
+	fcd.add_button("Open", 1);
+	fcd.add_button("Cancel", 0);
+	if (fcd.run()) {
+		// get the path
+		Glib::ustring path=fcd.get_filename();
+		
+		// and try to open it
+		PlayerData pd;
+		if (!IOHandler::load_player_stats(path, pd)) {
+			Gtk::MessageDialog md(*this, "Unable to open file.");
+			md.run();
+		}
+		
+		// add a new tab for this player
+		m_NB->add_player_tab(pd.name, pd);
+	}
+};
+
 // quit signal handler
 void MainWindow::on_quit() {
 	// hide the main window; ends gtk event loop
@@ -250,6 +304,8 @@ void MainWindow::construct() {
 	m_Actions=Gtk::ActionGroup::create();
 	
 	// add actions
+	m_Actions->add(Gtk::Action::create("FileOpen", Gtk::Stock::OPEN, "_Open", "Open saved player stats"),
+		       sigc::mem_fun(*this, &MainWindow::on_open));
 	m_Actions->add(Gtk::Action::create("FileQuit", Gtk::Stock::QUIT, "_Quit", "Quit the program"),
 		       sigc::mem_fun(*this, &MainWindow::on_quit));
 	
@@ -272,6 +328,8 @@ void MainWindow::construct() {
 	"<ui>"
 	"	<menubar name='MenuBar'>"
 	"		<menu action='FileMenu'>"
+	"			<menuitem action='FileOpen'/>"
+	"			<separator/>"
 	"			<menuitem action='FileQuit'/>"
 	"		</menu>"
 	"		<menu action='ToolsMenu'>"
@@ -309,6 +367,10 @@ void MainWindow::construct() {
 	
 	// allocate notebook
 	m_NB=manage(new PlayerView);
+	
+	// connect signals
+	m_NB->signal_save_stats_request.connect(sigc::mem_fun(*this, &MainWindow::on_save_player_stats));
+	m_NB->signal_refresh_player.connect(sigc::mem_fun(*this, &MainWindow::on_refresh_player));
 	
 	// build the intro page
 	Gtk::Box *ib=manage(new Gtk::HBox(false, 4));

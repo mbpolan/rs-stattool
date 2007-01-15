@@ -68,8 +68,14 @@ class PlayerView: public Gtk::Notebook {
 		// refresh player signal
 		sigc::signal<void, const Glib::ustring&> signal_refresh_player;
 		
+		// save stats request signal
+		sigc::signal<void, PlayerData&> signal_save_stats_request;
+		
 		// show player info
 		void on_list_info();
+		
+		// save player stats
+		void on_list_save_stats();
 		
 		// refresh the view
 		void on_list_refresh();

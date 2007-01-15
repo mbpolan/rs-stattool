@@ -26,6 +26,7 @@
 #include <gtkmm/actiongroup.h>
 #include <gtkmm/window.h>
 #include <gtkmm/uimanager.h>
+#include "common.h"
 
 // forward declarations
 class Gtk::AboutDialog;
@@ -54,17 +55,26 @@ class MainWindow: public Gtk::Window {
 		// search button handler
 		void on_search_button_clicked();
 		
+		// refresh player stats button
+		void on_refresh_player(const Glib::ustring &name);
+		
 		// transfer begin handler
 		void on_transfer_start();
 		
 		// player data arrival handler
 		void on_data_ready(int code, char *data);
 		
+		// save player stats handler
+		void on_save_player_stats(PlayerData &pd);
+		
 		// compare slot handler
 		void on_compare_players();
 		
 		// about signal handler
 		void on_about();
+		
+		// open player stats handler
+		void on_open();
 		
 		// quit signal handler
 		void on_quit();
@@ -97,7 +107,7 @@ class MainWindow: public Gtk::Window {
 		// about dialog
 		Gtk::AboutDialog *m_AboutDialog;
 		
-		// comparison dialog
+		// dialogs
 		CompareDialog *m_CompareDialog;
 		
 		// rs parser

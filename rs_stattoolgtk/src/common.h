@@ -35,6 +35,13 @@
 // total amount of skills
 #define SKILL_COUNT	23
 
+// save flags
+#define SAVE_TIMESTAMP		0x01
+
+// save file magic number and version
+#define RSP_FILE_HEADER		"RSP"
+#define RSP_FILE_VERSION	10
+
 // tree view colors
 #define COMPARE_COLOR_LOW	"#de4040"
 #define COMPARE_COLOR_HI	"#5ade40"

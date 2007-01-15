@@ -1,7 +1,7 @@
 bin_PROGRAMS = rs_stattoolgtk
-rs_stattoolgtk_SOURCES = rs_stattoolgtk.cpp mainwindow.cpp playerview.cpp \
-				clistview.cpp utilities.cpp rsparser.cpp infodialog.cpp comparedialog.cpp \
-	comparelistview.cpp
+rs_stattoolgtk_SOURCES = rs_stattoolgtk.cpp dialogs.cpp mainwindow.cpp playerview.cpp \
+			 clistview.cpp utilities.cpp rsparser.cpp infodialog.cpp \
+			 io.cpp comparedialog.cpp comparelistview.cpp
 
 # set the include path found by configure
 INCLUDES= $(all_includes)
