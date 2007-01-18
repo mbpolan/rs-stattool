@@ -23,6 +23,8 @@
 #include "common.h"
 #include "comparedialog.h"
 #include "aboutdialog.h"
+#include "dialogs.h"
+#include "io.h"
 #include "rs_stattoolmfc.h"
 #include "maindialog.h"
 #include "playerinfodialog.h"
@@ -36,10 +38,12 @@ BEGIN_MESSAGE_MAP(MainDialog, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_GOBUTTON, onGoButtonClicked)
+	ON_COMMAND(ID_FILE_OPEN, onFileOpen)
 	ON_COMMAND(ID_FILE_QUIT, onFileQuit)
 	ON_COMMAND(ID_TOOLS_COMPARE, onToolsCompare)
 	ON_COMMAND(ID_HELP_ABOUT, onHelpAbout)
 	ON_COMMAND(ID_POPUP_VIEWINFO, onViewPlayerInfo)
+	ON_COMMAND(ID_POPUP_SAVESTATS, onSaveStats)
 	ON_COMMAND(ID_POPUP_REFRESH, onRefresh)
 	ON_COMMAND(ID_POPUP_CLOSETAB, onTabsClose)
 	ON_MESSAGE(WM_RSTHREAD_STARTED, onThreadStarted)
@@ -132,6 +136,27 @@ HCURSOR MainDialog::OnQueryDragIcon() {
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+// file menu open handler
+void MainDialog::onFileOpen() {
+	// run file dialog first
+	CFileDialog fd(true, "rsp", NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, 
+				   "Player Stat Files (*.rsp)", this);
+	if (fd.DoModal()==IDOK) {
+		// get the file path
+		CString path=fd.GetPathName();
+
+		// and load the data
+		PlayerData pd;
+		if (!IOHandler::loadPlayerStats(path, pd)) {
+			AfxMessageBox(_T("Unable to load file."), MB_OK);
+			return;
+		}
+
+		// add a new tab
+		m_NB.addPlayerTab(pd);
+	}
+}
+
 // file menu quit handler
 void MainDialog::onFileQuit() {
 	EndDialog(1);
@@ -180,6 +205,25 @@ void MainDialog::onViewPlayerInfo() {
 		PlayerInfoDialog pid;
 		pid.setPlayerInfo(_T(pd->name), _T(pd->overallLvl), _T(pd->overallExp));
 		pid.DoModal();
+	}
+}
+
+// save player stats to file
+void MainDialog::onSaveStats() {
+	// get the player to save
+	PlayerData *pd=m_NB.getPlayerData(m_NB.getCurrentTabName());
+	if (!pd)
+		return;
+
+	// run the save dialog
+	SaveDialog sdiag;
+	if (sdiag.DoModal()==IDOK) {
+		// get the save data struct
+		struct SaveDialog::SaveOps sp=sdiag.getSaveOps();
+
+		// and ask the iohandler to save this file
+		if (!IOHandler::savePlayerStats(sp.path, *pd, sp.timestamp))
+			AfxMessageBox(_T("Unable to save file."), MB_OK);
 	}
 }
 

@@ -39,6 +39,10 @@
 // total amount of skills
 #define SKILL_COUNT	23
 
+// save file magic number and version
+#define RSP_FILE_HEADER		"RSP"
+#define RSP_FILE_VERSION	10
+
 // compare dialog dimensions
 #define COMPARE_DIALOG_WIDTH	520
 #define COMPARE_DIALOG_HEIGHT	460

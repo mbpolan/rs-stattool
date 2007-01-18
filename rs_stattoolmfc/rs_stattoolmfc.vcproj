@@ -200,6 +200,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\dialogs.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\io.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\maindialog.cpp"
 				>
 			</File>
@@ -263,6 +271,14 @@
 			</File>
 			<File
 				RelativePath=".\comparedialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\dialogs.h"
+				>
+			</File>
+			<File
+				RelativePath=".\io.h"
 				>
 			</File>
 			<File

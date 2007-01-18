@@ -17,67 +17,54 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-// maindialog.h: the MainDialog class
+// dialogs.h: various dialog classes
 
 #pragma once
-#include "afxcmn.h"
 #include "afxwin.h"
-#include "playernotebook.h"
-#include "rsparser.h"
-#include "resource.h"
 
-// core MFC application dialog
-class MainDialog: public CDialog {
+
+// dialog used during stats save
+class SaveDialog : public CDialog {
+	DECLARE_DYNAMIC(SaveDialog)
+	
 	public:
+		// save data
+		struct SaveOps {
+			CString path;
+			bool timestamp;
+		};
+
 		// constructor
-		MainDialog(CWnd* pParent = NULL);
+		SaveDialog(CWnd* pParent = NULL);
 
 		// destructor
-		virtual ~MainDialog();
+		virtual ~SaveDialog();
+
+		// get a save struct
+		struct SaveOps getSaveOps();
 	
 		// Dialog Data
-		enum { IDD = IDD_RS_STATTOOLMFC_DIALOG };
+		enum { IDD = IDD_SAVEDIALOG };
 	
 	protected:
-		// our icon
-		HICON m_hIcon;
-		
-		virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
-		
-		// msg map functions
-		virtual BOOL OnInitDialog();
-		afx_msg void OnPaint();
-		afx_msg HCURSOR OnQueryDragIcon();
-		afx_msg void OnOK() { };
-		afx_msg void OnClose() { };
-		afx_msg void onFileOpen();
-		afx_msg void onFileQuit();
-		afx_msg void onToolsCompare();
-		afx_msg void onHelpAbout();
-		afx_msg void onViewPlayerInfo();
-		afx_msg void onSaveStats();
-		afx_msg void onTabsClose();
-		afx_msg void onGoButtonClicked();
-		afx_msg void onRefresh();
-		afx_msg void onTabSelChange(NMHDR *pNMHDR, LRESULT *pResult);
-		afx_msg void onTabRClick(NMHDR *pNMHDR, LRESULT *pResult);
-		afx_msg LRESULT onThreadStarted(WPARAM wParam, LPARAM lParam);
-		afx_msg LRESULT onThreadFinished(WPARAM wParam, LPARAM lParam);
-		
+		// ddx/ddv support
+		virtual void DoDataExchange(CDataExchange* pDX);
+
+		// msg map handlers
+		afx_msg void onEditChange();
+		afx_msg void onFSButtonClicked();
+		afx_msg void onTSChecked();
+	
 		DECLARE_MESSAGE_MAP()
 
-		// menu
-		CMenu *m_Menu;
-		CMenu m_PopupMenu;
+		// file string
+		CString m_FilePath;
 
+		// timestamp
+		bool m_TSChecked;
+	
 		// widgets
-		CEdit m_PlayerNameEdit;
-		CButton m_GoButton;
-		PlayerNotebook m_NB;
-		CStatusBar m_StatBar;
-
-		// parser for html
-		RSParser m_Parser;
-public:
-	afx_msg void onAcceleratorQuit();
+		CButton m_ShowFSButton;
+		CEdit m_FilePathEdit;
+		CButton m_TimeStampCheck;
 };
