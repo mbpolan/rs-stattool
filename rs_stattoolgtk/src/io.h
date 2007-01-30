@@ -28,7 +28,7 @@
 class IOHandler {
 	public:
 		// i/o errors
-		enum IOError { IO_NO_ERROR=0, IO_OPEN_FAIL=-1, IO_BAD_HEADER=-2 };
+		enum IOError { IO_NO_ERROR=0, IO_OPEN_FAIL=-1, IO_BAD_HEADER=-2, IO_BAD_VERSION=-3 };
 		
 		// write a string value
 		static void write_string(FILE *f, const Glib::ustring &path);
@@ -37,7 +37,7 @@ class IOHandler {
 		static Glib::ustring read_string(FILE *f);
 		
 		// save player stats to file
-		static bool save_player_stats(const Glib::ustring &path, PlayerData pd, bool timestamp);
+		static bool save_player_stats(const Glib::ustring &path, PlayerData pd);
 		
 		// load player stats from file
 		static bool load_player_stats(const Glib::ustring &path, PlayerData &pd);

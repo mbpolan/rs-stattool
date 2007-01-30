@@ -72,7 +72,7 @@ InfoDialog::InfoDialog() {
 	Gtk::Button *button=add_button("OK", 0);
 	
 	show_all_children();
-};
+}
 
 // set player data
 void InfoDialog::set_player(const PlayerData &player) {
@@ -83,7 +83,7 @@ void InfoDialog::set_player(const PlayerData &player) {
 	m_RankLabel->set_text(player.overallRank);
 	
 	show_all_children();
-};
+}
 
 // response handler
 void InfoDialog::on_response(int id) {
@@ -92,4 +92,4 @@ void InfoDialog::on_response(int id) {
 	// hide the dialog
 	if (id==0)
 		hide();
-};
+}

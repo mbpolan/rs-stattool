@@ -49,7 +49,9 @@ class CompareDialog: public Gtk::Dialog {
 		// labels
 		Gtk::Label *m_TitleLabel;
 		Gtk::Label *m_P1Label;
+		Gtk::Label *m_P1DateLabel;
 		Gtk::Label *m_P2Label;
+		Gtk::Label *m_P2DateLabel;
 		
 		// scrolled window
 		Gtk::ScrolledWindow *m_SW;

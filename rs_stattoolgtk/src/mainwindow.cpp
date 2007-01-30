@@ -37,6 +37,7 @@
 #include "mainwindow.h"
 #include "playerview.h"
 #include "rsparser.h"
+#include "utilities.h"
 
 // constructor
 MainWindow::MainWindow(): 
@@ -46,10 +47,11 @@ MainWindow::MainWindow():
 	
 	// set the minimum width
 	set_size_request(400, 320);
+	set_resizable(false);
 	
 	// build the ui
 	construct();
-};
+}
 
 // destructor
 MainWindow::~MainWindow() {
@@ -57,19 +59,19 @@ MainWindow::~MainWindow() {
 	delete m_Parser;
 	delete m_AboutDialog;
 	delete m_CompareDialog;
-};
+}
 
 // search button click handler
 void MainWindow::on_search_button_clicked() {
 	// connect online and get the html data
 	m_Parser->get_player_data(m_PlayerEntry->get_text());
-};
+}
 
 // refresh player stats button
 void MainWindow::on_refresh_player(const Glib::ustring &name) {
 	// connect and get the updated data
 	m_Parser->get_player_data(m_PlayerEntry->get_text());
-};
+}
 
 // transfer begin handler
 void MainWindow::on_transfer_start() {
@@ -78,7 +80,7 @@ void MainWindow::on_transfer_start() {
 	
 	// alert the user
 	m_StatusBar->push("Downloading stats...");
-};
+}
 
 // player data arrival handler
 void MainWindow::on_data_ready(int code, char *data) {
@@ -102,6 +104,7 @@ void MainWindow::on_data_ready(int code, char *data) {
 	else {
 		// and add a player tab
 		m_NB->add_player_tab(player.name, player);
+		m_NB->set_current_page(-1);
 		
 		// success message
 		m_StatusBar->push("Stats transfer complete");
@@ -109,7 +112,7 @@ void MainWindow::on_data_ready(int code, char *data) {
 	
 	// enable search button
 	m_SearchButton->set_sensitive(true);
-};
+}
 
 // save player stats handler
 void MainWindow::on_save_player_stats(PlayerData &pd) {
@@ -126,93 +129,102 @@ void MainWindow::on_save_player_stats(PlayerData &pd) {
 			sp.path+=".rsp";
 		
 		// ask the io handler to save this player's stats
-		if (!IOHandler::save_player_stats(sp.path, pd, sp.timestamp)) {
+		if (!IOHandler::save_player_stats(sp.path, pd)) {
 			Gtk::MessageDialog md(*this, "Unable to save: an unknown error occurred.");
 			md.run();
 		}
 		
 	}
 	sdiag.hide();
-};
+}
 
 // compare slot handler
 void MainWindow::on_compare_players() {
-	// first check if there are at least two player stats downloaded
-	if (m_NB->get_map().size()<2) {
-		Gtk::MessageDialog md(*this, "You must have at least two players' stats downloaded.");
-		md.run();
-		return;
-	}
+	// initialize compare selection dialog
+	CompareSelectDialog cd;
+	CompareDialog cdialog;
 	
-	// build dialog
-	Gtk::Dialog d;
-	Gtk::VBox *vb=d.get_vbox();
-	vb->set_spacing(5);
-	vb->set_border_width(5);
+	// build list of players
+	std::vector<Glib::ustring> players;
+	PlayerView::PlayerMap map=m_NB->get_map();
+	for (PlayerView::PlayerMap::iterator it=map.begin(); it!=map.end(); ++it)
+		players.push_back((*it).first);
 	
-	// layout boxes
-	Gtk::HBox *hb1=manage(new Gtk::HBox);
-	Gtk::HBox *hb2=manage(new Gtk::HBox);
-	hb1->set_spacing(5);
-	hb2->set_spacing(5);
+	// use it to fill in combo boxes
+	cd.set_players(players);
 	
-	// labels
-	Gtk::Label *title=manage(new Gtk::Label("Compare Players"));
-	Gtk::Label *p1=manage(new Gtk::Label("Player 1"));
-	Gtk::Label *p2=manage(new Gtk::Label("Player 2"));
-	
-	// combo boxes
-	Gtk::ComboBoxText *p1cb=manage(new Gtk::ComboBoxText);
-	Gtk::ComboBoxText *p2cb=manage(new Gtk::ComboBoxText);
-	
-	// add player names
-	PlayerView::playerMap map=m_NB->get_map();
-	for (PlayerView::playerMap::iterator it=map.begin(); it!=map.end(); ++it) {
-		p1cb->append_text((*it).first);
-		p2cb->append_text((*it).first);
-	}
-	p1cb->set_active(0);
-	p2cb->set_active(1);
-	
-	// add buttons
-	d.add_button("OK", 1);
-	d.add_button("Cancel", 0);
-	
-	// pack widgets
-	vb->pack_start(*title);
-	hb1->pack_start(*p1);
-	hb1->pack_start(*p1cb);
-	hb2->pack_start(*p2);
-	hb2->pack_start(*p2cb);
-	vb->pack_start(*hb1, Gtk::PACK_SHRINK);
-	vb->pack_start(*hb2, Gtk::PACK_SHRINK);
-	
-	d.show_all_children();
-	
-	// run the choice dialog
-	int res=d.run();
-	if (res) {
-		// check text
-		Glib::ustring player1=p1cb->get_active_text();
-		Glib::ustring player2=p2cb->get_active_text();
+	// run the dialog
+	if (cd.run()==1) {
+		// get a compare struct
+		struct CompareSelectDialog::CompareData data=cd.get_compare_struct();
 		
-		// get both players' data
-		PlayerData p1=m_NB->get_player_data(player1);
-		PlayerData p2=m_NB->get_player_data(player2);
+		// player data structs
+		PlayerData p1, p2;
 		
-		// set the data
-		m_CompareDialog->set_players(p1, p2);
+		// compare using only 2 files
+		if (data.useFile1 && data.useFile2) {
+			// load both files
+			if (!IOHandler::load_player_stats(data.player1File, p1) || 
+			    (!IOHandler::load_player_stats(data.player2File, p2))) {
+				Gtk::MessageDialog md(*this, Utils::translate_io_error(IOHandler::Error));
+				md.run();
+				return;
+			}
+			
+			// set the compare data
+			cdialog.set_players(p1, p2);
+		}
 		
-		// run the dialog
-		m_CompareDialog->run();
+		// compare player 1 with file
+		else if (!data.useFile1 && data.useFile2) {
+			// get data for player 1
+			p1=m_NB->get_player_data(data.player1);
+			
+			// load the other file
+			if (!IOHandler::load_player_stats(data.player2File, p2)) {
+				Gtk::MessageDialog md(*this, Utils::translate_io_error(IOHandler::Error));
+				md.run();
+				return;
+			}
+			
+			// set the compare data
+			cdialog.set_players(p1, p2);
+		}
+		
+		// compare file with player 2
+		else if (data.useFile1 && !data.useFile2) {
+			// get data for player 2
+			p2=m_NB->get_player_data(data.player2);
+			
+			// load the other file
+			if (!IOHandler::load_player_stats(data.player1File, p1)) {
+				Gtk::MessageDialog md(*this, Utils::translate_io_error(IOHandler::Error));
+				md.run();
+				return;
+			}
+			
+			// set the compare data
+			cdialog.set_players(p1, p2);
+		}
+		
+		// compare two players
+		else {
+			p1=m_NB->get_player_data(data.player1);
+			p2=m_NB->get_player_data(data.player2);
+			
+			cdialog.set_players(p1, p2);
+		}
+		
+		// bring up the dialog
+		cdialog.run();
 	}
-};
+}
 
 // about signal handler
 void MainWindow::on_about() {
 	// bring up the about dialog
 	m_AboutDialog->run();
-};
+}
 
 // open player stats handler
 void MainWindow::on_open() {
@@ -220,6 +232,13 @@ void MainWindow::on_open() {
 	Gtk::FileChooserDialog fcd(*this, "Open Saved Player Stats", Gtk::FILE_CHOOSER_ACTION_OPEN);
 	fcd.add_button("Open", 1);
 	fcd.add_button("Cancel", 0);
+	
+	// add a filter
+	Gtk::FileFilter filter;
+	filter.set_name("Player Stat Files (*.rsp)");
+	filter.add_pattern("*.rsp");
+	fcd.set_filter(filter);
+	
 	if (fcd.run()) {
 		// get the path
 		Glib::ustring path=fcd.get_filename();
@@ -227,20 +246,20 @@ void MainWindow::on_open() {
 		// and try to open it
 		PlayerData pd;
 		if (!IOHandler::load_player_stats(path, pd)) {
-			Gtk::MessageDialog md(*this, "Unable to open file.");
+			Gtk::MessageDialog md(*this, Utils::translate_io_error(IOHandler::Error));
 			md.run();
 		}
 		
 		// add a new tab for this player
 		m_NB->add_player_tab(pd.name, pd);
 	}
-};
+}
 
 // quit signal handler
 void MainWindow::on_quit() {
 	// hide the main window; ends gtk event loop
 	hide();
-};
+}
 
 // build the ui
 void MainWindow::construct() {
@@ -411,4 +430,4 @@ void MainWindow::construct() {
 	
 	// show child widgets
 	show_all_children();
-};
+}

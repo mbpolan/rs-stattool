@@ -24,6 +24,7 @@
 
 // necessary includes
 #include <glibmm/ustring.h>
+#include "io.h"
 
 // Utilities namespace
 namespace Utils {
@@ -36,6 +37,9 @@ int ustring_to_int(const Glib::ustring &str);
 
 // convert an int to a glib::ustring
 Glib::ustring int_to_ustring(int a);
+
+// translate an IOHandler error to string
+Glib::ustring translate_io_error(IOHandler::IOError error);
 
 }; // namespace Utils
 

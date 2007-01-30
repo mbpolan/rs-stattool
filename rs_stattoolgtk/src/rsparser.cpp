@@ -30,7 +30,7 @@
 
 // constructor
 RSParser::RSParser() {
-};
+}
 
 void RSParser::get_player_data(const Glib::ustring &name) {
 	// create a new handler thread
@@ -41,7 +41,7 @@ void RSParser::get_player_data(const Glib::ustring &name) {
 	// connect dispatcher signals
 	dispatcher_transfer_start.connect(sigc::mem_fun(*this, &RSParser::on_process_transfer_start));
 	dispatcher_data_ready.connect(sigc::mem_fun(*this, &RSParser::on_process_data_ready));
-};
+}
 
 // parse html data
 PlayerData RSParser::parse_html(char *data, bool *ok) {	
@@ -131,17 +131,17 @@ PlayerData RSParser::parse_html(char *data, bool *ok) {
 	}
 	
 	return player;
-};
+}
 
 void RSParser::on_process_transfer_start() {
 	// emit the actual transfer_start signal
 	signal_transfer_start.emit();
-};
+}
 
 void RSParser::on_process_data_ready() {
 	// emit actual data_ready signal
 	signal_data_ready.emit(m_Data.code, (m_Data.data ? m_Data.data : NULL));
-};
+}
 
 // get player data thread routine
 void RSParser::thread_get_player_data(const Glib::ustring &name) {
@@ -177,7 +177,7 @@ void RSParser::thread_get_player_data(const Glib::ustring &name) {
 	
 	// clean up
 	curl_easy_cleanup(handle);
-};
+}
 
 size_t RSParser::curl_write_func(void *ptr, size_t size, size_t nmemb, void *userp) {
 	// calculate the real size
@@ -213,7 +213,7 @@ size_t RSParser::curl_write_func(void *ptr, size_t size, size_t nmemb, void *use
 	
 	// return the actual size
 	return rsize;
-};
+}
 
 // validate player's name
 Glib::ustring RSParser::validate_name(const Glib::ustring &name) {
@@ -234,4 +234,4 @@ Glib::ustring RSParser::validate_name(const Glib::ustring &name) {
 	}
 	
 	return vname;
-};
+}

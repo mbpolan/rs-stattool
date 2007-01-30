@@ -40,7 +40,7 @@
 
 // save file magic number and version
 #define RSP_FILE_HEADER		"RSP"
-#define RSP_FILE_VERSION	10
+#define RSP_FILE_VERSION	11
 
 // tree view colors
 #define COMPARE_COLOR_LOW	"#de4040"
@@ -83,6 +83,9 @@ typedef struct {
 	
 	// skills
 	SkillData skills[SKILL_COUNT];
+	
+	// timestamp
+	time_t timestamp;
 } PlayerData;
 
 // transfer data from parser

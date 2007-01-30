@@ -47,6 +47,8 @@ CompareDialog::CompareDialog(): Gtk::Dialog() {
 	
 	m_P1Label=manage(new Gtk::Label);
 	m_P2Label=manage(new Gtk::Label);
+	m_P1DateLabel=manage(new Gtk::Label);
+	m_P2DateLabel=manage(new Gtk::Label);
 	
 	// allocate scrolled window and list view
 	m_SW=manage(new Gtk::ScrolledWindow);
@@ -59,14 +61,16 @@ CompareDialog::CompareDialog(): Gtk::Dialog() {
 	table->attach(*m_TitleLabel, 0, 2, 0, 1, Gtk::FILL | Gtk::EXPAND, Gtk::SHRINK);
 	table->attach(*m_P1Label, 0, 1, 1, 2, Gtk::FILL | Gtk::EXPAND, Gtk::SHRINK);
 	table->attach(*m_P2Label, 1, 2, 1, 2, Gtk::FILL | Gtk::EXPAND, Gtk::SHRINK);
-	table->attach(*m_SW, 0, 2, 2, 3);
+	table->attach(*m_P1DateLabel, 0, 1, 2, 3, Gtk::FILL | Gtk::EXPAND, Gtk::SHRINK);
+	table->attach(*m_P2DateLabel, 1, 2, 2, 3, Gtk::FILL | Gtk::EXPAND, Gtk::SHRINK);
+	table->attach(*m_SW, 0, 2, 3, 4);
 	
 	// add buttons
-	add_button("Ok", 1);
+	add_button("OK", 1);
 	
 	// show children
 	show_all_children();
-};
+}
 
 // set players to compare
 void CompareDialog::set_players(const PlayerData &p1, const PlayerData &p2) {
@@ -74,16 +78,24 @@ void CompareDialog::set_players(const PlayerData &p1, const PlayerData &p2) {
 	std::stringstream ss;
 	for (int i=0; i<2; i++) {
 		Glib::ustring col, name;
-		Gtk::Label *label;
+		Gtk::Label *label, *tslabel;
+		time_t ts;
 		if (i==0) {
 			col=COMPARE_COLOR_HI;
 			name=p1.name;
 			label=m_P1Label;
+			
+			ts=p1.timestamp;
+			tslabel=m_P1DateLabel;
+			
 		}
 		else {
 			col=COMPARE_COLOR_LOW;
 			name=p2.name;
 			label=m_P2Label;
+			
+			ts=p2.timestamp;
+			tslabel=m_P2DateLabel;
 		}
 		
 		// format the string
@@ -93,13 +105,16 @@ void CompareDialog::set_players(const PlayerData &p1, const PlayerData &p2) {
 		// set the string
 		label->set_markup(ss.str());
 		
+		// set the date by timestamp
+		tslabel->set_text((ts==0 ? "-" : ctime(&ts)));
+		
 		// clear
 		ss.str("");
 	}
 	
 	// populate the list view
 	m_ListView->set_compare_data(p1, p2);
-};
+}
 
 // signal response handler
 void CompareDialog::on_response(int id) {
@@ -110,4 +125,4 @@ void CompareDialog::on_response(int id) {
 		// close this dialog
 		hide();
 	}
-};
+}

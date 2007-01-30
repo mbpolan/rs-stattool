@@ -52,7 +52,7 @@ CompareListView::CompareListView() {
 	// set size
 	col->set_fixed_width(3);
 	col->set_resizable(false);
-};
+}
 
 // set comparison data
 void CompareListView::set_compare_data(const PlayerData &p1, const PlayerData &p2) {
@@ -76,7 +76,7 @@ void CompareListView::set_compare_data(const PlayerData &p1, const PlayerData &p
 	
 	// color the rows based on player rank
 	color_rows();
-};
+}
 
 void CompareListView::color_rows() {
 	// get list of columns
@@ -115,7 +115,7 @@ void CompareListView::color_rows() {
 					   m_Columns.m_Color);
 		}
 	}
-};
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // SeparatorCellRenderer implementation
@@ -123,7 +123,7 @@ void CompareListView::color_rows() {
 // constructor
 SeparatorCellRenderer::SeparatorCellRenderer():
 		Glib::ObjectBase(typeid(SeparatorCellRenderer)) {
-};
+}
 
 // get the renderer's cell size
 void SeparatorCellRenderer::get_size_vfunc(Gtk::Widget&, const Gdk::Rectangle* cell_area,
@@ -157,7 +157,7 @@ void SeparatorCellRenderer::get_size_vfunc(Gtk::Widget&, const Gdk::Rectangle* c
 			*y_offset=std::max(0, *y_offset);
 		}
 	}
-};
+}
 
 // render the cell
 void SeparatorCellRenderer::render_vfunc(const Glib::RefPtr<Gdk::Drawable>& window, Gtk::Widget& widget,
@@ -191,4 +191,4 @@ void SeparatorCellRenderer::render_vfunc(const Glib::RefPtr<Gdk::Drawable>& wind
 				      x_offset, y_offset,
 				      w, h);
 	*/
-};
+}

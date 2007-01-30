@@ -40,4 +40,4 @@ int main(int argc, char *argv[]) {
 	app.run(mw);
 	
 	return 0;
-};
+}

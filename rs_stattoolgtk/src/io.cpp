@@ -19,6 +19,7 @@
  ***************************************************************************/
 // io.cpp: implementation of IOHandler class
 
+#include <glibmm.h>
 #include <cstdio>
 #include <ctime>
 #include "io.h"
@@ -52,7 +53,7 @@ Glib::ustring IOHandler::read_string(FILE *f) {
 };
 
 // save player stats to file
-bool IOHandler::save_player_stats(const Glib::ustring &path, PlayerData pd, bool timestamp) {
+bool IOHandler::save_player_stats(const Glib::ustring &path, PlayerData pd) {
 	// open the file
 	FILE *f=fopen(path.c_str(), "wb");
 	if (!f) {
@@ -68,15 +69,10 @@ bool IOHandler::save_player_stats(const Glib::ustring &path, PlayerData pd, bool
 	fwrite((char*) mn, sizeof(char), 3, f);
 	fwrite((short*) &version, sizeof(short), 1, f);
 	
-	// write whether or not we have a timestamp
-	fwrite((int*) &timestamp, sizeof(int), 1, f);
-	
-	// see if we should write the timestamp
-	if (timestamp) {
-		time_t rtime;
-		time(&rtime);
-		fwrite((time_t*) &rtime, sizeof(time_t), 1, f);
-	}
+	// write the timestamp
+	time_t rtime;
+	time(&rtime);
+	fwrite((time_t*) &rtime, sizeof(time_t), 1, f);
 	
 	// write player name length
 	write_string(f, pd.name);
@@ -119,19 +115,21 @@ bool IOHandler::load_player_stats(const Glib::ustring &path, PlayerData &pd) {
 	fread((short*) &version, sizeof(short), 1, f);
 	
 	// check the header
-	if (strncmp(mn, RSP_FILE_HEADER, 3)!=0 || version!=RSP_FILE_VERSION) {
+	if (strncmp(mn, RSP_FILE_HEADER, 3)!=0) {
 		fclose(f);
 		IOHandler::Error=IOHandler::IO_BAD_HEADER;
 		return false;
 	}
 	
-	// see if we should read in the timestamp
-	int ts;
-	fread((int*) &ts, sizeof(int), 1, f);
-	if (ts) {
-		time_t timestamp;
-		fread((time_t*) &timestamp, sizeof(time_t), 1, f);
+	// check the version
+	if (version!=RSP_FILE_VERSION) {
+		fclose(f);
+		IOHandler::Error=IOHandler::IO_BAD_VERSION;
+		return false;
 	}
+	
+	// read the timestamp
+	fread((time_t*) &pd.timestamp, sizeof(time_t), 1, f);
 	
 	// read name
 	pd.name=read_string(f);

@@ -33,7 +33,7 @@ void* Utils::alloc(void *ptr, size_t size) {
 		return realloc(ptr, size);
 	else
 		return malloc(size);
-};
+}
 
 // convert a glib::ustring to an int
 int Utils::ustring_to_int(const Glib::ustring &str) {
@@ -51,7 +51,7 @@ int Utils::ustring_to_int(const Glib::ustring &str) {
 	
 	// convert to integer
 	return atoi(tmp.c_str());
-};
+}
 
 // convert an int to a glib::ustring
 Glib::ustring Utils::int_to_ustring(int a) {
@@ -60,4 +60,17 @@ Glib::ustring Utils::int_to_ustring(int a) {
 	
 	Glib::ustring str=ss.str();
 	return str;
-};
+}
+
+// translate an IOHandler error to string
+Glib::ustring Utils::translate_io_error(IOHandler::IOError error) {
+	Glib::ustring str;
+	switch(error) {
+		case IOHandler::IO_BAD_HEADER: str="This is not a supported RSP file."; break;
+		case IOHandler::IO_BAD_VERSION: str="This file version is unsupported."; break;
+		case IOHandler::IO_OPEN_FAIL: str="Unable to open file."; break;
+		default: str="Unknown error."; break;
+	}
+	
+	return str;
+}

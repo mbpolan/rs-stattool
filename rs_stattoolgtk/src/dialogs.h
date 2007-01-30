@@ -23,11 +23,85 @@
 #define DIALOGS_H
 
 #include <gtkmm/button.h>
+#include <gtkmm/comboboxtext.h>
 #include <gtkmm/dialog.h>
+#include <gtkmm/entry.h>
+#include <gtkmm/frame.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/label.h>
 #include <gtkmm/checkbutton.h>
 #include "playerview.h"
+
+// dialog for choosing players to compare
+class CompareSelectDialog: public Gtk::Dialog {
+	public:
+		// data for comparison
+		struct CompareData {
+			// player names
+			Glib::ustring player1;
+			Glib::ustring player2;
+			
+			// file paths
+			Glib::ustring player1File;
+			Glib::ustring player2File;
+			
+			// comparison types
+			bool useFile1;
+			bool useFile2;
+		};
+		
+		// constructor
+		CompareSelectDialog();
+		
+		// set players to use for combo boxes
+		void set_players(std::vector<Glib::ustring> players);
+		
+		// get a struct containing compare data
+		struct CompareData get_compare_struct();
+		
+	protected:
+		// build the dialog
+		void construct();
+		
+		// checkbox toggle handlers
+		void on_file_cb1_toggled();
+		void on_file_cb2_toggled();
+		
+		// show fs buttons click handlers
+		void on_show_fs1_clicked();
+		void on_show_fs2_clicked();
+		
+		// labels
+		Gtk::Label *m_TitleLabel;
+		Gtk::Label *m_Player1Label;
+		Gtk::Label *m_Player2Label;
+		Gtk::Label *m_Player1FileLabel;
+		Gtk::Label *m_Player2FileLabel;
+		
+		// check buttons
+		Gtk::CheckButton *m_File1CB;
+		Gtk::CheckButton *m_File2CB;
+		
+		// combo boxes
+		Gtk::ComboBoxText *m_Player1CB;
+		Gtk::ComboBoxText *m_Player2CB;
+		
+		// frames
+		Gtk::Frame *m_Player1Frame;
+		Gtk::Frame *m_Player2Frame;
+		
+		// entries
+		Gtk::Entry *m_File1Entry;
+		Gtk::Entry *m_File2Entry;
+		
+		// buttons
+		Gtk::Button *m_OKButton;
+		Gtk::Button *m_CancelButton;
+		Gtk::Button *m_ShowFSButton1;
+		Gtk::Button *m_ShowFSButton2;
+};
+
+/***************************************************************************/
 
 // dialog shown before saving
 class SaveDialog: public Gtk::Dialog {
@@ -35,7 +109,6 @@ class SaveDialog: public Gtk::Dialog {
 		// save data
 		struct SaveOps {
 			Glib::ustring path;
-			bool timestamp;
 		};
 		
 		// constructor
@@ -60,9 +133,6 @@ class SaveDialog: public Gtk::Dialog {
 		
 		// entry for path name
 		Gtk::Entry *m_FilePathEntry;
-		
-		// save timestamp checkbox
-		Gtk::CheckButton *m_TimeStampCB;
 };
 
 #endif

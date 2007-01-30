@@ -26,12 +26,12 @@
 CListView::CListView() {
 	construct();
 	
-};
+}
 
 // clear out all data
 void CListView::clear() {
 	m_Model->clear();
-};
+}
 
 // populate the list
 void CListView::populate(const PlayerData &data) {
@@ -51,7 +51,7 @@ void CListView::populate(const PlayerData &data) {
 		row[m_Columns.m_Level]=s.level;
 		row[m_Columns.m_Exp]=s.xp;
 	}
-};
+}
 
 // build the widget
 void CListView::construct() {
@@ -66,4 +66,4 @@ void CListView::construct() {
 	append_column("Rank", m_Columns.m_Rank);
 	append_column("Level", m_Columns.m_Level);
 	append_column("Exp", m_Columns.m_Exp);
-};
+}

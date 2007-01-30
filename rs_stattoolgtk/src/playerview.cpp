@@ -51,13 +51,13 @@ PlayerView::PlayerView() {
 	
 	// allocate dialog
 	m_InfoDialog=new InfoDialog;
-};
+}
 
 // destructor
 PlayerView::~PlayerView() {
 	delete m_PopupMenu;
 	delete m_InfoDialog;
-};
+}
 
 // add a player tab
 void PlayerView::add_player_tab(const Glib::ustring &name, const PlayerData &data) {
@@ -92,7 +92,7 @@ void PlayerView::add_player_tab(const Glib::ustring &name, const PlayerData &dat
 		// refresh the view
 		show_all_children();
 	}
-};
+}
 
 // get player data struct
 PlayerData PlayerView::get_player_data(const Glib::ustring &name) {
@@ -158,13 +158,16 @@ PlayerData PlayerView::get_player_data(const Glib::ustring &name) {
 			player.skills[c++]=skill;
 		}
 		
+		// no timestamp
+		player.timestamp=0;
+		
 		// convert totals back to ustring
 		player.overallLvl=Utils::int_to_ustring(tlevel);
 		player.overallExp=Utils::int_to_ustring(texp);
 	}
 	
 	return player;
-};
+}
 
 // show player info
 void PlayerView::on_list_info() {
@@ -183,7 +186,7 @@ void PlayerView::on_list_info() {
 	// display dialog
 	m_InfoDialog->set_player(player);
 	m_InfoDialog->run();
-};
+}
 
 // save player stats
 void PlayerView::on_list_save_stats() {
@@ -200,7 +203,7 @@ void PlayerView::on_list_save_stats() {
 	
 	// emit save signal
 	signal_save_stats_request.emit(player);
-};
+}
 
 // refresh the view
 void PlayerView::on_list_refresh() {
@@ -216,7 +219,7 @@ void PlayerView::on_list_refresh() {
 			signal_refresh_player.emit(name);
 		}
 	}
-};
+}
 
 // close the tab
 void PlayerView::on_list_close() {
@@ -235,7 +238,7 @@ void PlayerView::on_list_close() {
 			m_PlayerMap.erase(name);
 		}
 	}
-};
+}
 
 // button press event handler
 bool PlayerView::on_button_press_event(GdkEventButton *e) {
@@ -253,7 +256,7 @@ bool PlayerView::on_button_press_event(GdkEventButton *e) {
 		// popup menu
 		m_PopupMenu->popup(e->button, e->time);
 	}
-};
+}
 
 // check if the current page consists of a player
 bool PlayerView::current_page_is_player() {
@@ -268,7 +271,7 @@ bool PlayerView::current_page_is_player() {
 	}
 	
 	return false;
-};
+}
 
 // enable or disable all popup menu items
 void PlayerView::toggle_menu_items(bool enable) {
@@ -279,4 +282,4 @@ void PlayerView::toggle_menu_items(bool enable) {
 	for (Gtk::Menu::MenuList::iterator it=list.begin(); it!=list.end(); ++it) {
 		(*it).set_sensitive(enable);
 	}
-};
+}
