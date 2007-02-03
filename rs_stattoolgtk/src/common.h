@@ -85,7 +85,7 @@ typedef struct {
 	SkillData skills[SKILL_COUNT];
 	
 	// timestamp
-	time_t timestamp;
+	Glib::ustring timestamp;
 } PlayerData;
 
 // transfer data from parser

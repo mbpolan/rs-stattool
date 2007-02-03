@@ -159,7 +159,7 @@ PlayerData PlayerView::get_player_data(const Glib::ustring &name) {
 		}
 		
 		// no timestamp
-		player.timestamp=0;
+		player.timestamp="-";
 		
 		// convert totals back to ustring
 		player.overallLvl=Utils::int_to_ustring(tlevel);

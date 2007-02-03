@@ -70,9 +70,9 @@ bool IOHandler::save_player_stats(const Glib::ustring &path, PlayerData pd) {
 	fwrite((short*) &version, sizeof(short), 1, f);
 	
 	// write the timestamp
-	time_t rtime;
-	time(&rtime);
-	fwrite((time_t*) &rtime, sizeof(time_t), 1, f);
+	time_t curTime=time(NULL);
+	pd.timestamp=ctime(&curTime);
+	write_string(f, pd.timestamp);
 	
 	// write player name length
 	write_string(f, pd.name);
@@ -129,7 +129,7 @@ bool IOHandler::load_player_stats(const Glib::ustring &path, PlayerData &pd) {
 	}
 	
 	// read the timestamp
-	fread((time_t*) &pd.timestamp, sizeof(time_t), 1, f);
+	pd.timestamp=read_string(f);
 	
 	// read name
 	pd.name=read_string(f);

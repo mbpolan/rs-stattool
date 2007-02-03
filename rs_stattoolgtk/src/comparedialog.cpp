@@ -77,9 +77,8 @@ void CompareDialog::set_players(const PlayerData &p1, const PlayerData &p2) {
 	// create formatted strings
 	std::stringstream ss;
 	for (int i=0; i<2; i++) {
-		Glib::ustring col, name;
+		Glib::ustring col, name, ts;
 		Gtk::Label *label, *tslabel;
-		time_t ts;
 		if (i==0) {
 			col=COMPARE_COLOR_HI;
 			name=p1.name;
@@ -106,7 +105,7 @@ void CompareDialog::set_players(const PlayerData &p1, const PlayerData &p2) {
 		label->set_markup(ss.str());
 		
 		// set the date by timestamp
-		tslabel->set_text((ts==0 ? "-" : ctime(&ts)));
+		tslabel->set_text(ts);
 		
 		// clear
 		ss.str("");
