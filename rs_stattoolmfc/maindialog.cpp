@@ -28,6 +28,7 @@
 #include "rs_stattoolmfc.h"
 #include "maindialog.h"
 #include "playerinfodialog.h"
+#include "utilities.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -106,6 +107,7 @@ BOOL MainDialog::OnInitDialog() {
 	m_StatBar.SetPaneInfo(0, IDS_INDICATOR_STATUS, SBPS_NORMAL, cr.Width());
 	RepositionBars(AFX_IDW_CONTROLBAR_FIRST, AFX_IDW_CONTROLBAR_LAST, IDS_INDICATOR_STATUS);
 
+	ghDlg=m_hWnd;
 	return TRUE;
 }
 
@@ -138,9 +140,11 @@ HCURSOR MainDialog::OnQueryDragIcon() {
 
 // file menu open handler
 void MainDialog::onFileOpen() {
+	static char BASED_CODE filter[] = "Player Stat Files (*.rsp)|*.rsp|";
+
 	// run file dialog first
 	CFileDialog fd(true, "rsp", NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, 
-				   "Player Stat Files (*.rsp)", this);
+				   filter, this);
 	if (fd.DoModal()==IDOK) {
 		// get the file path
 		CString path=fd.GetPathName();
@@ -148,7 +152,7 @@ void MainDialog::onFileOpen() {
 		// and load the data
 		PlayerData pd;
 		if (!IOHandler::loadPlayerStats(path, pd)) {
-			AfxMessageBox(_T("Unable to load file."), MB_OK);
+			AfxMessageBox(Utils::translateIOError(IOHandler::Error), MB_OK);
 			return;
 		}
 
@@ -171,22 +175,56 @@ void MainDialog::onToolsCompare() {
 
 	// run it now
 	if (sdiag.DoModal()==IDOK) {
-		// get our selections
-		CString p1, p2;
-		sdiag.getSelectedPlayers(p1, p2);
+		CompareSelectDialog::CompareData cd=sdiag.getCompareStruct();
 
-		// get player data
-		PlayerData *pd1=m_NB.getPlayerData(p1);
-		PlayerData *pd2=m_NB.getPlayerData(p2);
+		// player data structs
+		PlayerData p1, p2;
 
-		// make sure these are valid
-		if (!pd1 || !pd2)
-			return;
+		// compare using both files
+		if (cd.useFile1 && cd.useFile2) {
+			if (!IOHandler::loadPlayerStats(cd.player1File, p1) ||
+				!IOHandler::loadPlayerStats(cd.player2File, p2)) {
+					AfxMessageBox(Utils::translateIOError(IOHandler::Error), MB_OK);
+					return;
+			}
+		}
 
-		// run the compare dialog itself now
-		CompareDialog cdiag;
-		cdiag.setCompareData(pd1, pd2);
-		cdiag.DoModal();
+		// compare player 1 with file
+		else if (!cd.useFile1 && cd.useFile2) {
+			if (m_NB.getPlayerData(cd.player1))
+				p1=*m_NB.getPlayerData(cd.player1);
+
+			if (!IOHandler::loadPlayerStats(cd.player2File, p2)) {
+				AfxMessageBox(Utils::translateIOError(IOHandler::Error), MB_OK);
+				return;
+			}
+		}
+
+		// compare file with player 2
+		else if (cd.useFile1 && !cd.useFile2) {
+			if (m_NB.getPlayerData(cd.player2))
+				p2=*m_NB.getPlayerData(cd.player2);
+
+			if (!IOHandler::loadPlayerStats(cd.player1File, p1)) {
+				AfxMessageBox(Utils::translateIOError(IOHandler::Error), MB_OK);
+				return;
+			}
+		}
+
+		// compare two players
+		else {
+			if (m_NB.getPlayerData(cd.player1))
+				p1=*m_NB.getPlayerData(cd.player1);
+			if (m_NB.getPlayerData(cd.player2))
+				p2=*m_NB.getPlayerData(cd.player2);
+		}
+		
+		// allocate a compare dialog
+		CompareDialog cdialog;
+
+		// set the player data and run the dialog
+		cdialog.setCompareData(&p1, &p2);
+		cdialog.DoModal();
 	}
 }
 
@@ -222,7 +260,7 @@ void MainDialog::onSaveStats() {
 		struct SaveDialog::SaveOps sp=sdiag.getSaveOps();
 
 		// and ask the iohandler to save this file
-		if (!IOHandler::savePlayerStats(sp.path, *pd, sp.timestamp))
+		if (!IOHandler::savePlayerStats(sp.path, *pd))
 			AfxMessageBox(_T("Unable to save file."), MB_OK);
 	}
 }

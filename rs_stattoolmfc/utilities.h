@@ -22,6 +22,8 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
+#include "io.h"
+
 // Utilities namespace
 namespace Utils {
 
@@ -36,6 +38,9 @@ long cstringToLong(const CString &str);
 
 // convert an int to a CString
 CString intToCString(int a);
+
+// translate an IOHandler to string
+CString translateIOError(IOHandler::IOError error);
 
 }; // namespace Utils
 

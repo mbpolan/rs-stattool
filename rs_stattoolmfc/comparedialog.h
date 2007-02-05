@@ -33,6 +33,21 @@ class CompareSelectDialog : public CDialog {
 	DECLARE_DYNAMIC(CompareSelectDialog)
 	
 	public:
+		// data for comparison
+		struct CompareData {
+			// player names
+			CString player1;
+			CString player2;
+
+			// file paths
+			CString player1File;
+			CString player2File;
+
+			// comparison types
+			bool useFile1;
+			bool useFile2;
+		};
+
 		// constructor
 		CompareSelectDialog(CWnd* pParent = NULL);
 
@@ -42,8 +57,8 @@ class CompareSelectDialog : public CDialog {
 		// set the players to use
 		bool setPlayers(std::vector<PlayerData*> players);
 
-		// return the selected players
-		void getSelectedPlayers(CString &p1, CString &p2);
+		// get a struct containing compare data
+		struct CompareData getCompareStruct();
 
 		// Dialog Data
 		enum { IDD = IDD_COMPARESELECTDIALOG };
@@ -56,23 +71,45 @@ class CompareSelectDialog : public CDialog {
 		virtual void DoDataExchange(CDataExchange* pDX);
 	
 		DECLARE_MESSAGE_MAP()
-		
-		// msg map handlers
-		afx_msg void onCombo1SelChange();
-		afx_msg void onCombo2SelChange();
-	
-		// widgets
-		CComboBox m_ComboBox1;
-		CComboBox m_ComboBox2;
 
-		// selected players
-		CString m_Selected1;
-		CString m_Selected2;
+		// msg map handlers
+		afx_msg void onFileCB1Clicked();
+		afx_msg void onFileCB2Clicked();
+		afx_msg void onShowFS1ButtonClicked();
+		afx_msg void onShowFS2ButtonClicked();
+		afx_msg void onFile1EditChanged();
+		afx_msg void onFile2EditChanged();
+		afx_msg void onPlayer1CBChange();
+		afx_msg void onPlayer2CBChange();
+
+		// combo boxes
+		CComboBox m_Player1CB;
+		CComboBox m_Player2CB;
+		
+		// labels
+		CStatic m_Player1Label;
+		CStatic m_Player2Label;
+		CStatic m_File1Label;
+		CStatic m_File2Label;
+		
+		// edits
+		CEdit m_File1Edit;
+		CEdit m_File2Edit;
+		
+		// buttons
+		CButton m_File1CB;
+		CButton m_File2CB;
+		CButton m_ShowFS1Button;
+		CButton m_ShowFS2Button;
 
 		// player data
 		std::vector<PlayerData*> m_Players;
+
+		// stored compare data
+		CompareData m_Data;
 };
 
+/***********************************************************************************/
 
 // dialog for comparing two players
 class CompareDialog: public CDialog {
@@ -106,6 +143,8 @@ class CompareDialog: public CDialog {
 		// widgets
 		CStatic m_Player1Static;
 		CStatic m_Player2Static;
+		CStatic m_Player1DateStatic;
+		CStatic m_Player2DateStatic;
 		CListCtrl m_CompareList;
 
 		// player data

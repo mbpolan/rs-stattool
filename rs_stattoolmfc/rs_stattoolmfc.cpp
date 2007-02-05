@@ -27,6 +27,9 @@
 #define new DEBUG_NEW
 #endif
 
+HWND ghDlg=0;
+HACCEL ghAccelTable=0;
+
 // msg map
 BEGIN_MESSAGE_MAP(Application, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
@@ -44,6 +47,9 @@ Application theApp;
 BOOL Application::InitInstance() {
 	CWinApp::InitInstance();
 
+	// initialize accelerator table
+	ghAccelTable=LoadAccelerators(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDR_ACCELERATOR1));
+
 	// set a registry key
 	SetRegistryKey(_T("Local RSStatTool"));
 
@@ -59,4 +65,16 @@ BOOL Application::InitInstance() {
 	}
 
 	return FALSE;
+}
+
+// override for accelerator keys
+BOOL Application::ProcessMessageFilter(int code, LPMSG lpMsg) {
+	if (code<0)
+		CWinApp::ProcessMessageFilter(code, lpMsg);
+	if (ghDlg && ghAccelTable) {
+		if (::TranslateAccelerator(ghDlg, ghAccelTable, lpMsg))
+			return TRUE;
+	}
+
+	return CWinApp::ProcessMessageFilter(code, lpMsg);
 }

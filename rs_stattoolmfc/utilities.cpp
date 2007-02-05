@@ -76,3 +76,16 @@ CString Utils::intToCString(int a) {
 	CString str=CString(ss.str().c_str());
 	return str;
 }
+
+// translate an IOHandler to string
+CString Utils::translateIOError(IOHandler::IOError error) {
+	CString str;
+	switch(error) {
+		case IOHandler::IO_BAD_HEADER: str="This is not a supported RSP file."; break;
+		case IOHandler::IO_BAD_VERSION: str="This file version is unsupported."; break;
+		case IOHandler::IO_OPEN_FAIL: str="Unable to open file."; break;
+		default: str="Unknown error."; break;
+	}
+	
+	return str;
+}

@@ -29,13 +29,11 @@ IMPLEMENT_DYNAMIC(SaveDialog, CDialog)
 BEGIN_MESSAGE_MAP(SaveDialog, CDialog)
 	ON_EN_CHANGE(IDC_PATHEDIT, onEditChange)
 	ON_BN_CLICKED(IDC_SHOWFSBUTTON, onFSButtonClicked)
-	ON_BN_CLICKED(IDC_TSCHECK, onTSChecked)
 END_MESSAGE_MAP()
 
 // constructor
 SaveDialog::SaveDialog(CWnd* pParent)
 	: CDialog(SaveDialog::IDD, pParent) {
-	m_TSChecked=false;
 }
 
 // destructor
@@ -46,7 +44,6 @@ SaveDialog::~SaveDialog() {
 struct SaveDialog::SaveOps SaveDialog::getSaveOps() {
 	struct SaveOps sp;
 	sp.path=m_FilePath;
-	sp.timestamp=m_TSChecked;
 
 	return sp;
 }
@@ -56,7 +53,6 @@ void SaveDialog::DoDataExchange(CDataExchange* pDX) {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_SHOWFSBUTTON, m_ShowFSButton);
 	DDX_Control(pDX, IDC_PATHEDIT, m_FilePathEdit);
-	DDX_Control(pDX, IDC_TSCHECK, m_TimeStampCheck);
 }
 
 // file path edit text change handler
@@ -67,17 +63,12 @@ void SaveDialog::onEditChange() {
 // m_ShowFSButton click handler
 void SaveDialog::onFSButtonClicked() {
 	// filters for file dialogs
-	static char BASED_CODE filter[] = { "Player Stat Files (*.rsp)" };
+	static char BASED_CODE filter[] = { "Player Stat Files (*.rsp)|*.rsp|" };
 
-	CFileDialog fd(false, _T("rsp"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, filter, this);
+	CFileDialog fd(false, "rsp", NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, filter, this);
 	if (fd.DoModal()==IDOK) {
 		// save the filename
 		m_FilePath=fd.GetPathName();
 		m_FilePathEdit.SetWindowText(m_FilePath);
 	}
-}
-
-// timestamp check button handler
-void SaveDialog::onTSChecked() {
-	m_TSChecked=m_TimeStampCheck.GetCheck();
 }

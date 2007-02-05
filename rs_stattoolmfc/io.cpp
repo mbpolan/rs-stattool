@@ -59,7 +59,7 @@ CString IOHandler::readString(FILE *f) {
 }
 
 // save player stats to file
-bool IOHandler::savePlayerStats(const CString &path, PlayerData pd, bool timestamp) {
+bool IOHandler::savePlayerStats(const CString &path, PlayerData pd) {
 	// open the file
 	FILE *f=fopen(path, "wb");
 	if (!f) {
@@ -75,16 +75,10 @@ bool IOHandler::savePlayerStats(const CString &path, PlayerData pd, bool timesta
 	fwrite((char*) mn, sizeof(char), 3, f);
 	fwrite((short*) &version, sizeof(short), 1, f);
 	
-	// write whether or not we have a timestamp
-	int ct=(int) timestamp;
-	fwrite((int*) &ct, sizeof(int), 1, f);
-	
-	// see if we should write the timestamp
-	if (timestamp) {
-		time_t rtime;
-		time(&rtime);
-		fwrite((time_t*) &rtime, sizeof(time_t), 1, f);
-	}
+	// write the timestamp
+	time_t ts=time(NULL);
+	CString cstrTime=ctime(&ts);
+	writeString(f, cstrTime);
 	
 	// write player name length
 	writeString(f, pd.name);
@@ -127,19 +121,21 @@ bool IOHandler::loadPlayerStats(const CString &path, PlayerData &pd) {
 	fread((short*) &version, sizeof(short), 1, f);
 	
 	// check the header
-	if (strncmp(mn, RSP_FILE_HEADER, 3)!=0 || version!=RSP_FILE_VERSION) {
+	if (strncmp(mn, RSP_FILE_HEADER, 3)!=0) {
 		fclose(f);
 		IOHandler::Error=IOHandler::IO_BAD_HEADER;
 		return false;
 	}
 	
-	// see if we should read in the timestamp
-	int ts;
-	fread((int*) &ts, sizeof(int), 1, f);
-	if (ts) {
-		time_t timestamp;
-		fread((time_t*) &timestamp, sizeof(time_t), 1, f);
-	}
+	// check version
+	if(version!=RSP_FILE_VERSION) {
+		fclose(f);
+		IOHandler::Error=IOHandler::IO_BAD_VERSION;
+		return false;
+	 }
+	
+	// read the timestamp
+	pd.timestamp=readString(f);
 	
 	// read name
 	pd.name=readString(f);

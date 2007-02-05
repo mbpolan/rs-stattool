@@ -28,7 +28,7 @@
 class IOHandler {
 	public:
 		// i/o errors
-		enum IOError { IO_NO_ERROR=0, IO_OPEN_FAIL=-1, IO_BAD_HEADER=-2 };
+		enum IOError { IO_NO_ERROR=0, IO_OPEN_FAIL=-1, IO_BAD_HEADER=-2, IO_BAD_VERSION=-3 };
 		
 		// write a string value
 		static void writeString(FILE *f, const CString &path);
@@ -37,7 +37,7 @@ class IOHandler {
 		static CString readString(FILE *f);
 		
 		// save player stats to file
-		static bool savePlayerStats(const CString &path, PlayerData pd, bool timestamp);
+		static bool savePlayerStats(const CString &path, PlayerData pd);
 		
 		// load player stats from file
 		static bool loadPlayerStats(const CString &path, PlayerData &pd);

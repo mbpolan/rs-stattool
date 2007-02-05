@@ -41,7 +41,7 @@
 
 // save file magic number and version
 #define RSP_FILE_HEADER		"RSP"
-#define RSP_FILE_VERSION	10
+#define RSP_FILE_VERSION	11
 
 // compare dialog dimensions
 #define COMPARE_DIALOG_WIDTH	520
@@ -78,6 +78,9 @@ typedef struct {
 	
 	// skills
 	SkillData skills[SKILL_COUNT];
+
+	// time stamp
+	CString timestamp;
 } PlayerData;
 
 // transfer data from parser

@@ -95,6 +95,7 @@ void PlayerNotebook::activateTabs() {
 void PlayerNotebook::addPlayerTab(PlayerData pd) {
 	// copy the player data
 	PlayerData *pdc=new PlayerData(pd);
+	pdc->timestamp="-";
 
 	// see if a player with this name already exists
 	int i=1; // start at 1 since first tab is not mapped

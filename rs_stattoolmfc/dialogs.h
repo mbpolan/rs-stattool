@@ -31,7 +31,6 @@ class SaveDialog : public CDialog {
 		// save data
 		struct SaveOps {
 			CString path;
-			bool timestamp;
 		};
 
 		// constructor
@@ -53,18 +52,13 @@ class SaveDialog : public CDialog {
 		// msg map handlers
 		afx_msg void onEditChange();
 		afx_msg void onFSButtonClicked();
-		afx_msg void onTSChecked();
 	
 		DECLARE_MESSAGE_MAP()
 
 		// file string
 		CString m_FilePath;
-
-		// timestamp
-		bool m_TSChecked;
 	
 		// widgets
 		CButton m_ShowFSButton;
 		CEdit m_FilePathEdit;
-		CButton m_TimeStampCheck;
 };

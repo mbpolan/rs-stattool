@@ -34,6 +34,7 @@ class Application : public CWinApp {
 	
 		// Overrides
 		virtual BOOL InitInstance();
+		virtual BOOL ProcessMessageFilter(int code, LPMSG lpMsg);
 		
 	protected:
 		DECLARE_MESSAGE_MAP()
