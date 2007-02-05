@@ -28,19 +28,19 @@
 namespace Utils {
 
 // allocate memory
-void* alloc(void *ptr, size_t size);
+void* Alloc(void *ptr, size_t size);
 
 // convert a CString to an int
-int cstringToInt(const CString &str);
+int CStringToInt(const CString &str);
 
 // convert a CString to a long
-long cstringToLong(const CString &str);
+long CStringToLong(const CString &str);
 
 // convert an int to a CString
-CString intToCString(int a);
+CString IntToCString(int a);
 
 // translate an IOHandler to string
-CString translateIOError(IOHandler::IOError error);
+CString TranslateIOError(IOHandler::IOError error);
 
 }; // namespace Utils
 

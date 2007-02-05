@@ -33,18 +33,18 @@ RSParser::RSParser() {
 }
 
 // get the player's high scores data
-void RSParser::getPlayerData(const CString &name, CDialog *md) {
+void RSParser::GetPlayerData(const CString &name, CDialog *md) {
 	struct CurlStruct *cs=new struct CurlStruct;
 	cs->diag=md->GetSafeHwnd();
 	cs->parser=this;
 	cs->pname=name;
 
 	// create a new thread
-	m_Thread=AfxBeginThread(threadGetPlayerData, (LPVOID) cs);
+	m_Thread=AfxBeginThread(ThreadGetPlayerData, (LPVOID) cs);
 }
 
 // calculate a player's total exp
-int RSParser::calculateTotalExp(const PlayerData &pd) {
+int RSParser::CalculateTotalExp(const PlayerData &pd) {
 	int totalExp=0;
 
 	// go over each skill
@@ -52,7 +52,7 @@ int RSParser::calculateTotalExp(const PlayerData &pd) {
 		SkillData s=pd.skills[i];
 
 		// convert the string exp to an integer
-		int texp=Utils::cstringToInt(s.xp);
+		int texp=Utils::CStringToInt(s.xp);
 		totalExp+=texp;
 	}
 
@@ -60,7 +60,7 @@ int RSParser::calculateTotalExp(const PlayerData &pd) {
 }
 
 // calculate a player's total level
-int RSParser::calculateTotalLevel(const PlayerData &pd) {
+int RSParser::CalculateTotalLevel(const PlayerData &pd) {
 	int totalLvl=0;
 
 	// go over each skill
@@ -68,7 +68,7 @@ int RSParser::calculateTotalLevel(const PlayerData &pd) {
 		SkillData s=pd.skills[i];
 
 		// convert the string exp to an integer
-		int tlvl=Utils::cstringToInt(s.level);
+		int tlvl=Utils::CStringToInt(s.level);
 		totalLvl+=tlvl;
 	}
 
@@ -76,7 +76,7 @@ int RSParser::calculateTotalLevel(const PlayerData &pd) {
 }
 
 // validate a player's name
-CString RSParser::validateName(const CString &name) {
+CString RSParser::ValidateName(const CString &name) {
 	CString ret=name;
 
 	// first, bring the string to lowercase
@@ -89,7 +89,7 @@ CString RSParser::validateName(const CString &name) {
 }
 
 // parse html data
-PlayerData RSParser::parseHTML(char *data, bool *ok) {
+PlayerData RSParser::ParseHTML(char *data, bool *ok) {
 	PlayerData player;
 
 	// make sure the string is valid
@@ -192,7 +192,7 @@ PlayerData RSParser::parseHTML(char *data, bool *ok) {
 }
 
 // thread function for network i/o
-UINT RSParser::threadGetPlayerData(LPVOID pParam) {
+UINT RSParser::ThreadGetPlayerData(LPVOID pParam) {
 	// cast the parameter to the PlayerNotebook widget
 	struct CurlStruct *cs=static_cast<struct CurlStruct*> (pParam);
 
@@ -203,18 +203,18 @@ UINT RSParser::threadGetPlayerData(LPVOID pParam) {
 	CURL *handle=curl_easy_init();
 
 	// reset the data
-	p->m_Chunk.set_data(NULL);
-	p->m_Chunk.set_size(0);
+	p->m_Chunk.SetData(NULL);
+	p->m_Chunk.SetSize(0);
 	p->m_Data.code=-1;
 	
 	// post fields
 	CString pfields="user1=";
-	pfields+=validateName(cs->pname);
+	pfields+=ValidateName(cs->pname);
 	
 	// set options
 	curl_easy_setopt(handle, CURLOPT_POSTFIELDS, (const char*) pfields);
 	curl_easy_setopt(handle, CURLOPT_URL, RS_HI_SCORES_URL);
-	curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, &RSParser::curlWriteFunc);
+	curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, &RSParser::CurlWriteFunc);
 	curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void*) &p->m_Chunk);
 
 	// alert the application that data transfer has started
@@ -225,7 +225,7 @@ UINT RSParser::threadGetPlayerData(LPVOID pParam) {
 	
 	// set transfer stats
 	p->m_Data.code=code;
-	p->m_Data.data=p->m_Chunk.get_data();
+	p->m_Data.data=p->m_Chunk.GetData();
 	
 	// clean up
 	curl_easy_cleanup(handle);
@@ -240,17 +240,17 @@ UINT RSParser::threadGetPlayerData(LPVOID pParam) {
 }
 
 // writing function for curl write-data callback
-size_t RSParser::curlWriteFunc(void *ptr, size_t size, size_t nmemb, void *userp) {
+size_t RSParser::CurlWriteFunc(void *ptr, size_t size, size_t nmemb, void *userp) {
 	// calculate the real size
 	size_t rsize=size*nmemb;
 	
 	// get our memory chunk
 	MemChunk *chunk=(MemChunk*) userp;
-	char *data=chunk->get_data();
-	size_t csize=chunk->get_size();
+	char *data=chunk->GetData();
+	size_t csize=chunk->GetSize();
 	
 	// reallocate the data
-	data=(char*) Utils::alloc(data, csize+rsize+1);
+	data=(char*) Utils::Alloc(data, csize+rsize+1);
 	if (data) {
 		// copy the new data
 		memcpy(&(data[csize]), ptr, rsize);
@@ -263,8 +263,8 @@ size_t RSParser::curlWriteFunc(void *ptr, size_t size, size_t nmemb, void *userp
 	}
 	
 	// set new size
-	chunk->set_size(csize);
-	chunk->set_data(data);
+	chunk->SetSize(csize);
+	chunk->SetData(data);
 	
 	// return the actual size
 	return rsize;

@@ -82,7 +82,7 @@ void PlayerTabDialog::DoDataExchange(CDataExchange* pDX) {
 }
 
 // fill in the skill table
-void PlayerTabDialog::setSkillData(PlayerData pd) {
+void PlayerTabDialog::SetSkillData(PlayerData pd) {
 	// clear out the list
 	m_SkillList.DeleteAllItems();
 

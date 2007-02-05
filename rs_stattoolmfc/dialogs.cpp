@@ -27,8 +27,8 @@ IMPLEMENT_DYNAMIC(SaveDialog, CDialog)
 
 // msg map
 BEGIN_MESSAGE_MAP(SaveDialog, CDialog)
-	ON_EN_CHANGE(IDC_PATHEDIT, onEditChange)
-	ON_BN_CLICKED(IDC_SHOWFSBUTTON, onFSButtonClicked)
+	ON_EN_CHANGE(IDC_PATHEDIT, OnEditChange)
+	ON_BN_CLICKED(IDC_SHOWFSBUTTON, OnFSButtonClicked)
 END_MESSAGE_MAP()
 
 // constructor
@@ -41,7 +41,7 @@ SaveDialog::~SaveDialog() {
 }
 
 // get a save struct
-struct SaveDialog::SaveOps SaveDialog::getSaveOps() {
+struct SaveDialog::SaveOps SaveDialog::GetSaveOps() {
 	struct SaveOps sp;
 	sp.path=m_FilePath;
 
@@ -56,12 +56,12 @@ void SaveDialog::DoDataExchange(CDataExchange* pDX) {
 }
 
 // file path edit text change handler
-void SaveDialog::onEditChange() {
+void SaveDialog::OnEditChange() {
 	m_FilePathEdit.GetWindowText(m_FilePath);
 }
 
 // m_ShowFSButton click handler
-void SaveDialog::onFSButtonClicked() {
+void SaveDialog::OnFSButtonClicked() {
 	// filters for file dialogs
 	static char BASED_CODE filter[] = { "Player Stat Files (*.rsp)|*.rsp|" };
 

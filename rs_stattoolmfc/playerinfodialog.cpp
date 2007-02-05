@@ -39,7 +39,7 @@ PlayerInfoDialog::~PlayerInfoDialog() {
 }
 
 // set the player info
-void PlayerInfoDialog::setPlayerInfo(const CString &name, const CString &level, const CString &exp) {
+void PlayerInfoDialog::SetPlayerInfo(const CString &name, const CString &level, const CString &exp) {
 	// set the labels for dialog initialize later on
 	m_Name=name;
 	m_Level=level;

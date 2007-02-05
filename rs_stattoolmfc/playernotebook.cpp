@@ -59,13 +59,13 @@ PlayerNotebook::~PlayerNotebook() {
 }
 
 // initialize the dialogs
-void PlayerNotebook::initDialogs() {
+void PlayerNotebook::InitDialogs() {
 	// create the dialog
 	m_Dialogs[0]->Create(m_DialogID[0], GetParent());
 }
 
 // activate the tabs
-void PlayerNotebook::activateTabs() {
+void PlayerNotebook::ActivateTabs() {
 	// get our selected dialog
 	int sel=GetCurSel();
 	if (m_Dialogs[sel]->m_hWnd)
@@ -92,7 +92,7 @@ void PlayerNotebook::activateTabs() {
 }
 
 // add a new player tab
-void PlayerNotebook::addPlayerTab(PlayerData pd) {
+void PlayerNotebook::AddPlayerTab(PlayerData pd) {
 	// copy the player data
 	PlayerData *pdc=new PlayerData(pd);
 	pdc->timestamp="-";
@@ -113,7 +113,7 @@ void PlayerNotebook::addPlayerTab(PlayerData pd) {
 				// cast the dialog appropriately and update skill data
 				PlayerTabDialog *tdiag=static_cast<PlayerTabDialog*> (diag);
 				if (tdiag) {
-					tdiag->setSkillData(pd);
+					tdiag->SetSkillData(pd);
 
 					// delete old data struct and replace it
 					delete m_Players[pd.name];
@@ -127,8 +127,8 @@ void PlayerNotebook::addPlayerTab(PlayerData pd) {
 	}
 
 	// calculate the total level and exp
-	pdc->overallExp=Utils::intToCString(RSParser::calculateTotalExp(pd));
-	pdc->overallLvl=Utils::intToCString(RSParser::calculateTotalLevel(pd));
+	pdc->overallExp=Utils::IntToCString(RSParser::CalculateTotalExp(pd));
+	pdc->overallLvl=Utils::IntToCString(RSParser::CalculateTotalLevel(pd));
 
 	// first we create a new tab
 	m_DialogID.push_back(IDD_TABDIALOG);
@@ -140,18 +140,18 @@ void PlayerNotebook::addPlayerTab(PlayerData pd) {
 	m_Players[pd.name]=pdc;
 
 	// now fill in the skill table
-	static_cast<PlayerTabDialog*> (m_Dialogs[m_PageCount])->setSkillData(pd);
+	static_cast<PlayerTabDialog*> (m_Dialogs[m_PageCount])->SetSkillData(pd);
 
 	// set this tab as our selection
 	SetCurSel(m_PageCount);
-	activateTabs();
+	ActivateTabs();
 
 	// incremene the amount of pages we have
 	m_PageCount++;
 }
 
 // return a vector of all players
-std::vector<PlayerData*> PlayerNotebook::getPlayers() {
+std::vector<PlayerData*> PlayerNotebook::GetPlayers() {
 	std::vector<PlayerData*> vec;
 	for (std::map<CString, PlayerData*>::iterator it=m_Players.begin();
 		 it!=m_Players.end(); ++it) {
@@ -162,12 +162,12 @@ std::vector<PlayerData*> PlayerNotebook::getPlayers() {
 }
 
 // get a player data struct for a player
-PlayerData* PlayerNotebook::getPlayerData(CString name) {
+PlayerData* PlayerNotebook::GetPlayerData(CString name) {
 	return m_Players[name];
 }
 
 // return the name of the currently open tab
-CString PlayerNotebook::getCurrentTabName() {
+CString PlayerNotebook::GetCurrentTabName() {
 	// get the currently selected tab
 	int sel=GetCurSel();
 
@@ -186,7 +186,7 @@ CString PlayerNotebook::getCurrentTabName() {
 }
 
 // close the current tab
-void PlayerNotebook::closeCurrentTab() {
+void PlayerNotebook::CloseCurrentTab() {
 	int sel=GetCurSel();
 
 	// make sure the first page cannot be closed
@@ -194,7 +194,7 @@ void PlayerNotebook::closeCurrentTab() {
 		return;
 
 	// first delete the player data struct
-	CString name=getCurrentTabName();
+	CString name=GetCurrentTabName();
 	for (std::map<CString, PlayerData*>::iterator it=m_Players.begin(); it!=m_Players.end(); ++it) {
 		if ((*it).first==name) {
 			delete (*it).second;
@@ -221,7 +221,7 @@ void PlayerNotebook::closeCurrentTab() {
 
 	// set the selection to the previous tab
 	SetCurSel(sel-1);
-	activateTabs();
+	ActivateTabs();
 
 	// close the tab
 	DeleteItem(sel);

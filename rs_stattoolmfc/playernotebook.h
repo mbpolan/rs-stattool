@@ -37,25 +37,25 @@ class PlayerNotebook: public CTabCtrl {
 		virtual ~PlayerNotebook();
 
 		// initialize the dialogs
-		void initDialogs();
+		void InitDialogs();
 
 		// activate the tabs
-		void activateTabs();
+		void ActivateTabs();
 
 		// add a new player tab
-		void addPlayerTab(PlayerData pd);
+		void AddPlayerTab(PlayerData pd);
 
 		// return a vector of all players
-		std::vector<PlayerData*> getPlayers();
+		std::vector<PlayerData*> GetPlayers();
 		
 		// get a player data struct for a player
-		PlayerData* getPlayerData(CString name);
+		PlayerData* GetPlayerData(CString name);
 
 		// return the name of the currently open tab
-		CString getCurrentTabName();
+		CString GetCurrentTabName();
 
 		// close the current tab
-		void closeCurrentTab();
+		void CloseCurrentTab();
 	
 	protected:
 		DECLARE_MESSAGE_MAP()

@@ -40,19 +40,19 @@ class RSParser {
 		RSParser();
 
 		// get the player's high scores data
-		void getPlayerData(const CString &name, CDialog *md);
+		void GetPlayerData(const CString &name, CDialog *md);
 
 		// calculate a player's total exp
-		static int calculateTotalExp(const PlayerData &pd);
+		static int CalculateTotalExp(const PlayerData &pd);
 
 		// calculate a player's total level
-		static int calculateTotalLevel(const PlayerData &pd);
+		static int CalculateTotalLevel(const PlayerData &pd);
 
 		// validate a player's name
-		static CString validateName(const CString &name);
+		static CString ValidateName(const CString &name);
 
 		// parse html data
-		static PlayerData parseHTML(char *data, bool *ok);
+		static PlayerData ParseHTML(char *data, bool *ok);
 
 		// curl data from previous session
 		MemChunk m_Chunk;
@@ -60,10 +60,10 @@ class RSParser {
 		
 	protected:
 		// thread function for network i/o
-		static UINT __cdecl threadGetPlayerData(LPVOID pParam);
+		static UINT __cdecl ThreadGetPlayerData(LPVOID pParam);
 
 		// writing function for curl write-data callback
-		static size_t curlWriteFunc(void *ptr, size_t size, size_t nmemb, void *userp);
+		static size_t CurlWriteFunc(void *ptr, size_t size, size_t nmemb, void *userp);
 
 		// the worker thread
 		CWinThread *m_Thread;

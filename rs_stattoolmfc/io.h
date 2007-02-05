@@ -31,16 +31,16 @@ class IOHandler {
 		enum IOError { IO_NO_ERROR=0, IO_OPEN_FAIL=-1, IO_BAD_HEADER=-2, IO_BAD_VERSION=-3 };
 		
 		// write a string value
-		static void writeString(FILE *f, const CString &path);
+		static void WriteString(FILE *f, const CString &path);
 		
 		// read a string value
-		static CString readString(FILE *f);
+		static CString ReadString(FILE *f);
 		
 		// save player stats to file
-		static bool savePlayerStats(const CString &path, PlayerData pd);
+		static bool SavePlayerStats(const CString &path, PlayerData pd);
 		
 		// load player stats from file
-		static bool loadPlayerStats(const CString &path, PlayerData &pd);
+		static bool LoadPlayerStats(const CString &path, PlayerData &pd);
 		
 		// global IO error
 		static IOError Error;

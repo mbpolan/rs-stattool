@@ -27,7 +27,7 @@
 IOHandler::IOError IOHandler::Error=IOHandler::IO_NO_ERROR;
 
 // write a string value
-void IOHandler::writeString(FILE *f, const CString &str) {
+void IOHandler::WriteString(FILE *f, const CString &str) {
 	if (!f)
 		return;
 
@@ -41,7 +41,7 @@ void IOHandler::writeString(FILE *f, const CString &str) {
 }
 
 // read a string value
-CString IOHandler::readString(FILE *f) {
+CString IOHandler::ReadString(FILE *f) {
 	if (!f)
 		return "";
 
@@ -59,7 +59,7 @@ CString IOHandler::readString(FILE *f) {
 }
 
 // save player stats to file
-bool IOHandler::savePlayerStats(const CString &path, PlayerData pd) {
+bool IOHandler::SavePlayerStats(const CString &path, PlayerData pd) {
 	// open the file
 	FILE *f=fopen(path, "wb");
 	if (!f) {
@@ -78,25 +78,25 @@ bool IOHandler::savePlayerStats(const CString &path, PlayerData pd) {
 	// write the timestamp
 	time_t ts=time(NULL);
 	CString cstrTime=ctime(&ts);
-	writeString(f, cstrTime);
+	WriteString(f, cstrTime);
 	
 	// write player name length
-	writeString(f, pd.name);
+	WriteString(f, pd.name);
 	
 	// write rank, level, and exp
-	writeString(f, pd.overallRank);
-	writeString(f, pd.overallLvl);
-	writeString(f, pd.overallExp);
+	WriteString(f, pd.overallRank);
+	WriteString(f, pd.overallLvl);
+	WriteString(f, pd.overallExp);
 	
 	// iterate over skills
 	for (int i=0; i<SKILL_COUNT; i++) {
 		SkillData s=pd.skills[i];
 		
 		// write skill data
-		writeString(f, s.name);
-		writeString(f, s.rank);
-		writeString(f, s.level);
-		writeString(f, s.xp);
+		WriteString(f, s.name);
+		WriteString(f, s.rank);
+		WriteString(f, s.level);
+		WriteString(f, s.xp);
 	}
 	
 	// wrap up
@@ -106,7 +106,7 @@ bool IOHandler::savePlayerStats(const CString &path, PlayerData pd) {
 }
 
 // load player stats from file
-bool IOHandler::loadPlayerStats(const CString &path, PlayerData &pd) {
+bool IOHandler::LoadPlayerStats(const CString &path, PlayerData &pd) {
 	// open the file
 	FILE *f=fopen(path, "rb");
 	if (!f) {
@@ -135,25 +135,25 @@ bool IOHandler::loadPlayerStats(const CString &path, PlayerData &pd) {
 	 }
 	
 	// read the timestamp
-	pd.timestamp=readString(f);
+	pd.timestamp=ReadString(f);
 	
 	// read name
-	pd.name=readString(f);
+	pd.name=ReadString(f);
 	
 	// read totals: rank, level, exp
-	pd.overallRank=readString(f);
-	pd.overallLvl=readString(f);
-	pd.overallExp=readString(f);
+	pd.overallRank=ReadString(f);
+	pd.overallLvl=ReadString(f);
+	pd.overallExp=ReadString(f);
 	
 	// read in skills
 	for (int i=0; i<SKILL_COUNT; i++) {
 		SkillData s;
 		
 		// read skill data
-		s.name=readString(f);
-		s.rank=readString(f);
-		s.level=readString(f);
-		s.xp=readString(f);
+		s.name=ReadString(f);
+		s.rank=ReadString(f);
+		s.level=ReadString(f);
+		s.xp=ReadString(f);
 		
 		pd.skills[i]=s;
 	}

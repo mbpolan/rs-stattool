@@ -28,14 +28,14 @@ IMPLEMENT_DYNAMIC(CompareSelectDialog, CDialog)
 
 // msg map
 BEGIN_MESSAGE_MAP(CompareSelectDialog, CDialog)
-	ON_BN_CLICKED(IDC_FILE1CB, onFileCB1Clicked)
-	ON_BN_CLICKED(IDC_FILE2CB, onFileCB2Clicked)
-	ON_BN_CLICKED(IDC_SHOWFS1BUTTON, onShowFS1ButtonClicked)
-	ON_BN_CLICKED(IDC_SHOWFS2BUTTON, onShowFS2ButtonClicked)
-	ON_EN_CHANGE(IDC_PLAYER1FILEEDIT, onFile1EditChanged)
-	ON_EN_CHANGE(IDC_PLAYER2FILEEDIT, onFile2EditChanged)
-	ON_CBN_SELCHANGE(IDC_PLAYER1COMBO, onPlayer1CBChange)
-	ON_CBN_SELCHANGE(IDC_PLAYER2COMBO, onPlayer2CBChange)
+	ON_BN_CLICKED(IDC_FILE1CB, OnFileCB1Clicked)
+	ON_BN_CLICKED(IDC_FILE2CB, OnFileCB2Clicked)
+	ON_BN_CLICKED(IDC_SHOWFS1BUTTON, OnShowFS1ButtonClicked)
+	ON_BN_CLICKED(IDC_SHOWFS2BUTTON, OnShowFS2ButtonClicked)
+	ON_EN_CHANGE(IDC_PLAYER1FILEEDIT, OnFile1EditChanged)
+	ON_EN_CHANGE(IDC_PLAYER2FILEEDIT, OnFile2EditChanged)
+	ON_CBN_SELCHANGE(IDC_PLAYER1COMBO, OnPlayer1CBChange)
+	ON_CBN_SELCHANGE(IDC_PLAYER2COMBO, OnPlayer2CBChange)
 END_MESSAGE_MAP()
 
 // constructor
@@ -48,7 +48,7 @@ CompareSelectDialog::~CompareSelectDialog() {
 }
 
 // set the players to use
-bool CompareSelectDialog::setPlayers(std::vector<PlayerData*> players) {
+bool CompareSelectDialog::SetPlayers(std::vector<PlayerData*> players) {
 	// set the list
 	m_Players=players;
 	return true;
@@ -71,8 +71,8 @@ BOOL CompareSelectDialog::OnInitDialog() {
 		m_Player2CB.SelectString(0, m_Players[1]->name);
 
 		// set defaults
-		onPlayer1CBChange();
-		onPlayer2CBChange();
+		OnPlayer1CBChange();
+		OnPlayer2CBChange();
 
 		// disable file comparison by default
 		m_File1CB.EnableWindow(true);
@@ -81,15 +81,15 @@ BOOL CompareSelectDialog::OnInitDialog() {
 		m_File2CB.SetCheck(false);
 
 		// toggle widgets
-		onFileCB1Clicked();
-		onFileCB2Clicked();
+		OnFileCB1Clicked();
+		OnFileCB2Clicked();
 	}
 
 	else if (m_Players.size()==1) {
 		m_Player1CB.SelectString(0, m_Players[0]->name);
 		
 		// set defaults
-		onPlayer1CBChange();
+		OnPlayer1CBChange();
 
 		// disable player 1 file comparison
 		m_File1CB.EnableWindow(false);
@@ -100,8 +100,8 @@ BOOL CompareSelectDialog::OnInitDialog() {
 		m_File2CB.SetCheck(true);
 
 		// toggle widgets
-		onFileCB1Clicked();
-		onFileCB2Clicked();
+		OnFileCB1Clicked();
+		OnFileCB2Clicked();
 	}
 
 	else {
@@ -114,15 +114,15 @@ BOOL CompareSelectDialog::OnInitDialog() {
 		m_File2CB.SetCheck(true);
 
 		// toggle widgets
-		onFileCB1Clicked();
-		onFileCB2Clicked();
+		OnFileCB1Clicked();
+		OnFileCB2Clicked();
 	}
 
 	return TRUE;
 }
 
 // get a struct containing compare data
-struct CompareSelectDialog::CompareData CompareSelectDialog::getCompareStruct() {
+struct CompareSelectDialog::CompareData CompareSelectDialog::GetCompareStruct() {
 	// copy the internal data struct
 	int size=m_Players.size();
 
@@ -161,7 +161,7 @@ void CompareSelectDialog::DoDataExchange(CDataExchange* pDX) {
 }
 
 // m_File1CB click handler
-void CompareSelectDialog::onFileCB1Clicked() {
+void CompareSelectDialog::OnFileCB1Clicked() {
 	bool t=m_File1CB.GetCheck();
 	m_Data.useFile1=(m_File1CB.IsWindowEnabled() && t);
 
@@ -174,7 +174,7 @@ void CompareSelectDialog::onFileCB1Clicked() {
 }
 
 // m_File2CB click handler
-void CompareSelectDialog::onFileCB2Clicked() {
+void CompareSelectDialog::OnFileCB2Clicked() {
 	bool t=m_File2CB.GetCheck();
 	m_Data.useFile2=(m_File2CB.IsWindowEnabled() && t);
 
@@ -187,7 +187,7 @@ void CompareSelectDialog::onFileCB2Clicked() {
 }
 
 // m_ShowFS1Button click handler
-void CompareSelectDialog::onShowFS1ButtonClicked() {
+void CompareSelectDialog::OnShowFS1ButtonClicked() {
 	static char BASED_CODE filter[] = "Player Stat Files (*.rsp)|*.rsp|";
 
 	// run the file chooser
@@ -199,7 +199,7 @@ void CompareSelectDialog::onShowFS1ButtonClicked() {
 }
 
 // m_ShowFS2Button click handler
-void CompareSelectDialog::onShowFS2ButtonClicked() {
+void CompareSelectDialog::OnShowFS2ButtonClicked() {
 	static char BASED_CODE filter[] = "Player Stat Files (*.rsp)|*.rsp|";
 
 	// run the file chooser
@@ -211,22 +211,22 @@ void CompareSelectDialog::onShowFS2ButtonClicked() {
 }
 
 // m_File1Edit change handler
-void CompareSelectDialog::onFile1EditChanged() {
+void CompareSelectDialog::OnFile1EditChanged() {
 	m_File1Edit.GetWindowText(m_Data.player1File);
 }
 
 // m_File2Edit change handler
-void CompareSelectDialog::onFile2EditChanged() {
+void CompareSelectDialog::OnFile2EditChanged() {
 	m_File2Edit.GetWindowText(m_Data.player2File);
 }
 
 // m_Player1CB selchange handler
-void CompareSelectDialog::onPlayer1CBChange() {
+void CompareSelectDialog::OnPlayer1CBChange() {
 	m_Player1CB.GetLBText(m_Player1CB.GetCurSel(), m_Data.player1);
 }
 
 // m_Player2CB selchange handler
-void CompareSelectDialog::onPlayer2CBChange() {
+void CompareSelectDialog::OnPlayer2CBChange() {
 	m_Player2CB.GetLBText(m_Player2CB.GetCurSel(), m_Data.player2);
 }
 
@@ -236,7 +236,7 @@ IMPLEMENT_DYNAMIC(CompareDialog, CDialog)
 
 // msg map
 BEGIN_MESSAGE_MAP(CompareDialog, CDialog)
-	ON_NOTIFY(NM_CUSTOMDRAW, IDC_COMPARELIST, onCustomDrawList)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_COMPARELIST, OnCustomDrawList)
 END_MESSAGE_MAP()
 
 // constructor
@@ -249,7 +249,7 @@ CompareDialog::~CompareDialog() {
 }
 
 // set the data for two players
-void CompareDialog::setCompareData(PlayerData *pd1, PlayerData *pd2) {
+void CompareDialog::SetCompareData(PlayerData *pd1, PlayerData *pd2) {
 	m_Players[0]=pd1;
 	m_Players[1]=pd2;
 }
@@ -289,8 +289,8 @@ BOOL CompareDialog::OnInitDialog() {
 		m_CompareList.SetItemText(index, 7, s2[i].xp);
 
 		// compare the exp points of both players
-		long exp1=Utils::cstringToLong(s1[i].xp);
-		long exp2=Utils::cstringToLong(s2[i].xp);
+		long exp1=Utils::CStringToLong(s1[i].xp);
+		long exp2=Utils::CStringToLong(s2[i].xp);
 
 		// if any of the two skills does not rank, assign -1
 		if (s1[i].xp.Find("-")!=-1 || s2[i].xp.Find("-")!=-1)
@@ -337,7 +337,7 @@ void CompareDialog::DoDataExchange(CDataExchange* pDX) {
 }
 
 // custom draw override for list view to draw colored rows
-void CompareDialog::onCustomDrawList(NMHDR* pNMHDR, LRESULT* pResult) {
+void CompareDialog::OnCustomDrawList(NMHDR* pNMHDR, LRESULT* pResult) {
 	NMLVCUSTOMDRAW *pLV=reinterpret_cast<NMLVCUSTOMDRAW*> (pNMHDR);
 	*pResult=CDRF_DODEFAULT;
 

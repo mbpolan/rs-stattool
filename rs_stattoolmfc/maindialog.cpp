@@ -38,19 +38,19 @@
 BEGIN_MESSAGE_MAP(MainDialog, CDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_GOBUTTON, onGoButtonClicked)
-	ON_COMMAND(ID_FILE_OPEN, onFileOpen)
-	ON_COMMAND(ID_FILE_QUIT, onFileQuit)
-	ON_COMMAND(ID_TOOLS_COMPARE, onToolsCompare)
-	ON_COMMAND(ID_HELP_ABOUT, onHelpAbout)
-	ON_COMMAND(ID_POPUP_VIEWINFO, onViewPlayerInfo)
-	ON_COMMAND(ID_POPUP_SAVESTATS, onSaveStats)
-	ON_COMMAND(ID_POPUP_REFRESH, onRefresh)
-	ON_COMMAND(ID_POPUP_CLOSETAB, onTabsClose)
-	ON_MESSAGE(WM_RSTHREAD_STARTED, onThreadStarted)
-	ON_MESSAGE(WM_RSTHREAD_FINISHED, onThreadFinished)
-	ON_NOTIFY(TCN_SELCHANGE, IDC_PLAYERNOTEBOOK, onTabSelChange)
-	ON_NOTIFY(NM_RCLICK, IDC_PLAYERNOTEBOOK, onTabRClick)
+	ON_BN_CLICKED(IDC_GOBUTTON, OnGoButtonClicked)
+	ON_COMMAND(ID_FILE_OPEN, OnFileOpen)
+	ON_COMMAND(ID_FILE_QUIT, OnFileQuit)
+	ON_COMMAND(ID_TOOLS_COMPARE, OnToolsCompare)
+	ON_COMMAND(ID_HELP_ABOUT, OnHelpAbout)
+	ON_COMMAND(ID_POPUP_VIEWINFO, OnViewPlayerInfo)
+	ON_COMMAND(ID_POPUP_SAVESTATS, OnSaveStats)
+	ON_COMMAND(ID_POPUP_REFRESH, OnRefresh)
+	ON_COMMAND(ID_POPUP_CLOSETAB, OnTabsClose)
+	ON_MESSAGE(WM_RSTHREAD_STARTED, OnThreadStarted)
+	ON_MESSAGE(WM_RSTHREAD_FINISHED, OnThreadFinished)
+	ON_NOTIFY(TCN_SELCHANGE, IDC_PLAYERNOTEBOOK, OnTabSelChange)
+	ON_NOTIFY(NM_RCLICK, IDC_PLAYERNOTEBOOK, OnTabRClick)
 END_MESSAGE_MAP()
 
 // constructor
@@ -90,9 +90,9 @@ BOOL MainDialog::OnInitDialog() {
 	m_PopupMenu.LoadMenu(IDR_MENU2);
 
 	// initialize tab widget
-	m_NB.initDialogs();
+	m_NB.InitDialogs();
 	m_NB.InsertItem(0, "RS Stat Tool"); // initial page
-	m_NB.activateTabs();
+	m_NB.ActivateTabs();
 
 	// status bar indicators
 	UINT BASED_CODE sIndicators [] = { IDS_INDICATOR_STATUS };
@@ -139,7 +139,7 @@ HCURSOR MainDialog::OnQueryDragIcon() {
 }
 
 // file menu open handler
-void MainDialog::onFileOpen() {
+void MainDialog::OnFileOpen() {
 	static char BASED_CODE filter[] = "Player Stat Files (*.rsp)|*.rsp|";
 
 	// run file dialog first
@@ -151,105 +151,105 @@ void MainDialog::onFileOpen() {
 
 		// and load the data
 		PlayerData pd;
-		if (!IOHandler::loadPlayerStats(path, pd)) {
-			AfxMessageBox(Utils::translateIOError(IOHandler::Error), MB_OK);
+		if (!IOHandler::LoadPlayerStats(path, pd)) {
+			AfxMessageBox(Utils::TranslateIOError(IOHandler::Error), MB_OK);
 			return;
 		}
 
 		// add a new tab
-		m_NB.addPlayerTab(pd);
+		m_NB.AddPlayerTab(pd);
 	}
 }
 
 // file menu quit handler
-void MainDialog::onFileQuit() {
+void MainDialog::OnFileQuit() {
 	EndDialog(1);
 }
 
 // tools menu compare handler
-void MainDialog::onToolsCompare() {
+void MainDialog::OnToolsCompare() {
 	// first, prepare the selection dialog
 	CompareSelectDialog sdiag;
-	if (!sdiag.setPlayers(m_NB.getPlayers()))
+	if (!sdiag.SetPlayers(m_NB.GetPlayers()))
 		return;
 
 	// run it now
 	if (sdiag.DoModal()==IDOK) {
-		CompareSelectDialog::CompareData cd=sdiag.getCompareStruct();
+		CompareSelectDialog::CompareData cd=sdiag.GetCompareStruct();
 
 		// player data structs
 		PlayerData p1, p2;
 
 		// compare using both files
 		if (cd.useFile1 && cd.useFile2) {
-			if (!IOHandler::loadPlayerStats(cd.player1File, p1) ||
-				!IOHandler::loadPlayerStats(cd.player2File, p2)) {
-					AfxMessageBox(Utils::translateIOError(IOHandler::Error), MB_OK);
+			if (!IOHandler::LoadPlayerStats(cd.player1File, p1) ||
+				!IOHandler::LoadPlayerStats(cd.player2File, p2)) {
+					AfxMessageBox(Utils::TranslateIOError(IOHandler::Error), MB_OK);
 					return;
 			}
 		}
 
 		// compare player 1 with file
 		else if (!cd.useFile1 && cd.useFile2) {
-			if (m_NB.getPlayerData(cd.player1))
-				p1=*m_NB.getPlayerData(cd.player1);
+			if (m_NB.GetPlayerData(cd.player1))
+				p1=*m_NB.GetPlayerData(cd.player1);
 
-			if (!IOHandler::loadPlayerStats(cd.player2File, p2)) {
-				AfxMessageBox(Utils::translateIOError(IOHandler::Error), MB_OK);
+			if (!IOHandler::LoadPlayerStats(cd.player2File, p2)) {
+				AfxMessageBox(Utils::TranslateIOError(IOHandler::Error), MB_OK);
 				return;
 			}
 		}
 
 		// compare file with player 2
 		else if (cd.useFile1 && !cd.useFile2) {
-			if (m_NB.getPlayerData(cd.player2))
-				p2=*m_NB.getPlayerData(cd.player2);
+			if (m_NB.GetPlayerData(cd.player2))
+				p2=*m_NB.GetPlayerData(cd.player2);
 
-			if (!IOHandler::loadPlayerStats(cd.player1File, p1)) {
-				AfxMessageBox(Utils::translateIOError(IOHandler::Error), MB_OK);
+			if (!IOHandler::LoadPlayerStats(cd.player1File, p1)) {
+				AfxMessageBox(Utils::TranslateIOError(IOHandler::Error), MB_OK);
 				return;
 			}
 		}
 
 		// compare two players
 		else {
-			if (m_NB.getPlayerData(cd.player1))
-				p1=*m_NB.getPlayerData(cd.player1);
-			if (m_NB.getPlayerData(cd.player2))
-				p2=*m_NB.getPlayerData(cd.player2);
+			if (m_NB.GetPlayerData(cd.player1))
+				p1=*m_NB.GetPlayerData(cd.player1);
+			if (m_NB.GetPlayerData(cd.player2))
+				p2=*m_NB.GetPlayerData(cd.player2);
 		}
 		
 		// allocate a compare dialog
 		CompareDialog cdialog;
 
 		// set the player data and run the dialog
-		cdialog.setCompareData(&p1, &p2);
+		cdialog.SetCompareData(&p1, &p2);
 		cdialog.DoModal();
 	}
 }
 
 // help menu about handler
-void MainDialog::onHelpAbout() {
+void MainDialog::OnHelpAbout() {
 	CAboutDlg diag;
 	diag.DoModal();
 }
 
 // view player info handler for tab popup
-void MainDialog::onViewPlayerInfo() {
+void MainDialog::OnViewPlayerInfo() {
 	// first get the player data struct
-	PlayerData *pd=m_NB.getPlayerData(m_NB.getCurrentTabName());
+	PlayerData *pd=m_NB.GetPlayerData(m_NB.GetCurrentTabName());
 	if (pd) {
 		// display the info dialog
 		PlayerInfoDialog pid;
-		pid.setPlayerInfo(_T(pd->name), _T(pd->overallLvl), _T(pd->overallExp));
+		pid.SetPlayerInfo(_T(pd->name), _T(pd->overallLvl), _T(pd->overallExp));
 		pid.DoModal();
 	}
 }
 
 // save player stats to file
-void MainDialog::onSaveStats() {
+void MainDialog::OnSaveStats() {
 	// get the player to save
-	PlayerData *pd=m_NB.getPlayerData(m_NB.getCurrentTabName());
+	PlayerData *pd=m_NB.GetPlayerData(m_NB.GetCurrentTabName());
 	if (!pd)
 		return;
 
@@ -257,53 +257,53 @@ void MainDialog::onSaveStats() {
 	SaveDialog sdiag;
 	if (sdiag.DoModal()==IDOK) {
 		// get the save data struct
-		struct SaveDialog::SaveOps sp=sdiag.getSaveOps();
+		struct SaveDialog::SaveOps sp=sdiag.GetSaveOps();
 
 		// and ask the iohandler to save this file
-		if (!IOHandler::savePlayerStats(sp.path, *pd))
+		if (!IOHandler::SavePlayerStats(sp.path, *pd))
 			AfxMessageBox(_T("Unable to save file."), MB_OK);
 	}
 }
 
 // close handler for tab popup
-void MainDialog::onTabsClose() {
-	m_NB.closeCurrentTab();
+void MainDialog::OnTabsClose() {
+	m_NB.CloseCurrentTab();
 }
 
 // selection change notify handler
-void MainDialog::onTabSelChange(NMHDR *pNMHDR, LRESULT *pResult) {
-	m_NB.activateTabs();
+void MainDialog::OnTabSelChange(NMHDR *pNMHDR, LRESULT *pResult) {
+	m_NB.ActivateTabs();
 	*pResult=0;
 }
 
 // go button click handler
-void MainDialog::onGoButtonClicked() {
+void MainDialog::OnGoButtonClicked() {
 	// get the player's name
 	CString name;
 	m_PlayerNameEdit.GetWindowText(name);
 
 	// and get the data
-	m_Parser.getPlayerData(name, this);
+	m_Parser.GetPlayerData(name, this);
 
 	// display message
 	m_StatBar.SetPaneText(0, _T("Beginning transfer..."), true);
 }
 
 // refresh popup handler
-void MainDialog::onRefresh() {
+void MainDialog::OnRefresh() {
 	// get the current tab's name
-	CString name=m_NB.getCurrentTabName();
+	CString name=m_NB.GetCurrentTabName();
 
 	// make sure this is a player tab
 	if (name=="RS Stat Tool")
 		return;
 
 	// get the new data
-	m_Parser.getPlayerData(name, this);
+	m_Parser.GetPlayerData(name, this);
 }
 
 // right click on tab handler
-void MainDialog::onTabRClick(NMHDR *pNMHDR, LRESULT *pResult) {
+void MainDialog::OnTabRClick(NMHDR *pNMHDR, LRESULT *pResult) {
 	// display the context menu at the cursor pos
 	CPoint pos;
 	GetCursorPos(&pos);
@@ -314,7 +314,7 @@ void MainDialog::onTabRClick(NMHDR *pNMHDR, LRESULT *pResult) {
 }
 
 // rs thread started
-LRESULT MainDialog::onThreadStarted(WPARAM wParam, LPARAM lParam) {
+LRESULT MainDialog::OnThreadStarted(WPARAM wParam, LPARAM lParam) {
 	// disable the go button
 	m_GoButton.EnableWindow(false);
 
@@ -324,19 +324,19 @@ LRESULT MainDialog::onThreadStarted(WPARAM wParam, LPARAM lParam) {
 }
 
 // rs thread finished
-LRESULT MainDialog::onThreadFinished(WPARAM wParam, LPARAM lParam) {
+LRESULT MainDialog::OnThreadFinished(WPARAM wParam, LPARAM lParam) {
 	// reenable the go button
 	m_GoButton.EnableWindow(true);
 
 	// parse the html data returned
 	bool ok=true;
-	PlayerData pd=RSParser::parseHTML(m_Parser.m_Data.data, &ok);
+	PlayerData pd=RSParser::ParseHTML(m_Parser.m_Data.data, &ok);
 	if (ok) {
 		// update the status bar
 		m_StatBar.SetPaneText(0, _T("Done"));
 
 		// add a player tab
-		m_NB.addPlayerTab(pd);
+		m_NB.AddPlayerTab(pd);
 	}
 	else
 		m_StatBar.SetPaneText(0, _T("** Player is not in the high scores **"));

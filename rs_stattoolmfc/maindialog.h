@@ -50,19 +50,19 @@ class MainDialog: public CDialog {
 		afx_msg HCURSOR OnQueryDragIcon();
 		afx_msg void OnOK() { };
 		afx_msg void OnClose() { };
-		afx_msg void onFileOpen();
-		afx_msg void onFileQuit();
-		afx_msg void onToolsCompare();
-		afx_msg void onHelpAbout();
-		afx_msg void onViewPlayerInfo();
-		afx_msg void onSaveStats();
-		afx_msg void onTabsClose();
-		afx_msg void onGoButtonClicked();
-		afx_msg void onRefresh();
-		afx_msg void onTabSelChange(NMHDR *pNMHDR, LRESULT *pResult);
-		afx_msg void onTabRClick(NMHDR *pNMHDR, LRESULT *pResult);
-		afx_msg LRESULT onThreadStarted(WPARAM wParam, LPARAM lParam);
-		afx_msg LRESULT onThreadFinished(WPARAM wParam, LPARAM lParam);
+		afx_msg void OnFileOpen();
+		afx_msg void OnFileQuit();
+		afx_msg void OnToolsCompare();
+		afx_msg void OnHelpAbout();
+		afx_msg void OnViewPlayerInfo();
+		afx_msg void OnSaveStats();
+		afx_msg void OnTabsClose();
+		afx_msg void OnGoButtonClicked();
+		afx_msg void OnRefresh();
+		afx_msg void OnTabSelChange(NMHDR *pNMHDR, LRESULT *pResult);
+		afx_msg void OnTabRClick(NMHDR *pNMHDR, LRESULT *pResult);
+		afx_msg LRESULT OnThreadStarted(WPARAM wParam, LPARAM lParam);
+		afx_msg LRESULT OnThreadFinished(WPARAM wParam, LPARAM lParam);
 		
 		DECLARE_MESSAGE_MAP()
 
@@ -78,6 +78,4 @@ class MainDialog: public CDialog {
 
 		// parser for html
 		RSParser m_Parser;
-public:
-	afx_msg void onAcceleratorQuit();
 };

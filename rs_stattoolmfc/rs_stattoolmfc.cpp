@@ -45,6 +45,7 @@ Application theApp;
 
 // Application initialization
 BOOL Application::InitInstance() {
+	InitCommonControls();
 	CWinApp::InitInstance();
 
 	// initialize accelerator table

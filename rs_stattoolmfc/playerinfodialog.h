@@ -37,7 +37,7 @@ class PlayerInfoDialog : public CDialog{
 		virtual ~PlayerInfoDialog();
 
 		// set the player info
-		void setPlayerInfo(const CString &name, const CString &level, const CString &exp);
+		void SetPlayerInfo(const CString &name, const CString &level, const CString &exp);
 
 		// Dialog Data
 		enum { IDD = IDD_PLAYERINFODIALOG };

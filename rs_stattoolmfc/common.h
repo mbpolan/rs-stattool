@@ -106,16 +106,16 @@ class MemChunk {
 		};
 		
 		// get the data buffer
-		char* get_data() { return m_Data; };
+		char* GetData() { return m_Data; };
 		
 		// get the data size
-		size_t get_size() { return m_Size; };
+		size_t GetSize() { return m_Size; };
 		
 		// set the data
-		void set_data(char *nData) { m_Data=nData; };
+		void SetData(char *nData) { m_Data=nData; };
 		
 		// set the size
-		void set_size(size_t nSize) { m_Size=nSize; };
+		void SetSize(size_t nSize) { m_Size=nSize; };
 		
 	protected:
 		// data buffer

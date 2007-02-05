@@ -60,7 +60,7 @@ class PlayerTabDialog: public CDialog {
 		virtual ~PlayerTabDialog();
 
 		// fill in the skill table
-		void setSkillData(PlayerData pd);
+		void SetSkillData(PlayerData pd);
 	
 		// Dialog Data
 		enum { IDD = IDD_TABDIALOG };

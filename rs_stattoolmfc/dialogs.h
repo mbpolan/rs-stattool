@@ -40,7 +40,7 @@ class SaveDialog : public CDialog {
 		virtual ~SaveDialog();
 
 		// get a save struct
-		struct SaveOps getSaveOps();
+		struct SaveOps GetSaveOps();
 	
 		// Dialog Data
 		enum { IDD = IDD_SAVEDIALOG };
@@ -50,8 +50,8 @@ class SaveDialog : public CDialog {
 		virtual void DoDataExchange(CDataExchange* pDX);
 
 		// msg map handlers
-		afx_msg void onEditChange();
-		afx_msg void onFSButtonClicked();
+		afx_msg void OnEditChange();
+		afx_msg void OnFSButtonClicked();
 	
 		DECLARE_MESSAGE_MAP()
 

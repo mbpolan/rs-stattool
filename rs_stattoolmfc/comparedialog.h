@@ -55,10 +55,10 @@ class CompareSelectDialog : public CDialog {
 		virtual ~CompareSelectDialog();
 
 		// set the players to use
-		bool setPlayers(std::vector<PlayerData*> players);
+		bool SetPlayers(std::vector<PlayerData*> players);
 
 		// get a struct containing compare data
-		struct CompareData getCompareStruct();
+		struct CompareData GetCompareStruct();
 
 		// Dialog Data
 		enum { IDD = IDD_COMPARESELECTDIALOG };
@@ -73,14 +73,14 @@ class CompareSelectDialog : public CDialog {
 		DECLARE_MESSAGE_MAP()
 
 		// msg map handlers
-		afx_msg void onFileCB1Clicked();
-		afx_msg void onFileCB2Clicked();
-		afx_msg void onShowFS1ButtonClicked();
-		afx_msg void onShowFS2ButtonClicked();
-		afx_msg void onFile1EditChanged();
-		afx_msg void onFile2EditChanged();
-		afx_msg void onPlayer1CBChange();
-		afx_msg void onPlayer2CBChange();
+		afx_msg void OnFileCB1Clicked();
+		afx_msg void OnFileCB2Clicked();
+		afx_msg void OnShowFS1ButtonClicked();
+		afx_msg void OnShowFS2ButtonClicked();
+		afx_msg void OnFile1EditChanged();
+		afx_msg void OnFile2EditChanged();
+		afx_msg void OnPlayer1CBChange();
+		afx_msg void OnPlayer2CBChange();
 
 		// combo boxes
 		CComboBox m_Player1CB;
@@ -123,7 +123,7 @@ class CompareDialog: public CDialog {
 		virtual ~CompareDialog();
 
 		// set the data for two players
-		void setCompareData(PlayerData *pd1, PlayerData *pd2);
+		void SetCompareData(PlayerData *pd1, PlayerData *pd2);
 
 		// Dialog Data
 		enum { IDD = IDD_COMPAREDIALOG };
@@ -138,7 +138,7 @@ class CompareDialog: public CDialog {
 		DECLARE_MESSAGE_MAP()
 
 		// msg map handlers
-		afx_msg void onCustomDrawList(NMHDR* pNMHDR, LRESULT* pResult);
+		afx_msg void OnCustomDrawList(NMHDR* pNMHDR, LRESULT* pResult);
 	
 		// widgets
 		CStatic m_Player1Static;

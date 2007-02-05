@@ -26,7 +26,7 @@
 #include "utilities.h"
 
 // allocate memory
-void* Utils::alloc(void *ptr, size_t size) {
+void* Utils::Alloc(void *ptr, size_t size) {
 	if (ptr)
 		return realloc(ptr, size);
 	else
@@ -34,7 +34,7 @@ void* Utils::alloc(void *ptr, size_t size) {
 }
 
 // convert a CString to an int
-int Utils::cstringToInt(const CString &str) {
+int Utils::CStringToInt(const CString &str) {
 	CString tmp;
 	
 	// check skill
@@ -52,7 +52,7 @@ int Utils::cstringToInt(const CString &str) {
 }
 
 // convert a CString to a long
-long Utils::cstringToLong(const CString &str) {
+long Utils::CStringToLong(const CString &str) {
 	CString tmp;
 
 	if (str=="-")
@@ -69,7 +69,7 @@ long Utils::cstringToLong(const CString &str) {
 }
 
 // convert an int to a CString
-CString Utils::intToCString(int a) {
+CString Utils::IntToCString(int a) {
 	std::stringstream ss;
 	ss << a;
 	
@@ -78,7 +78,7 @@ CString Utils::intToCString(int a) {
 }
 
 // translate an IOHandler to string
-CString Utils::translateIOError(IOHandler::IOError error) {
+CString Utils::TranslateIOError(IOHandler::IOError error) {
 	CString str;
 	switch(error) {
 		case IOHandler::IO_BAD_HEADER: str="This is not a supported RSP file."; break;
