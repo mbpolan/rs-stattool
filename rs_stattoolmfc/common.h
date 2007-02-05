@@ -26,6 +26,13 @@
 #include "stdafx.h"
 #include <iostream>
 
+// for common controls and windows xp themes
+#define ETDT_DISABLE		0x00000001
+#define ETDT_ENABLE			0x00000002
+#define ETDT_USETABTEXTURE	0x00000004
+#define ETDT_ENABLETAB		(ETDT_ENABLE | ETDT_USETABTEXTURE)
+typedef HRESULT STDAPICALLTYPE EnableThemeDialogTextureFn(HWND hwnd, DWORD dwFlags);
+
 // custom messages for Win32 thread com
 #define WM_RSTHREAD_STARTED (WM_USER+0x101)
 #define WM_RSTHREAD_FINISHED (WM_USER+0x102)

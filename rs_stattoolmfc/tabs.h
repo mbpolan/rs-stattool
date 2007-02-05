@@ -25,7 +25,7 @@
 #include "afxwin.h"
 
 // the initial tab for PlayerNotebook
-class InitialTabDialog: public CDialog{
+class InitialTabDialog: public CDialog {
 	DECLARE_DYNAMIC(InitialTabDialog)
 
 	public:
@@ -41,6 +41,9 @@ class InitialTabDialog: public CDialog{
 	protected:
 		// DDX/DDV support
 		virtual void DoDataExchange(CDataExchange* pDX);
+
+		// overrides
+		virtual BOOL OnInitDialog();
 
 		DECLARE_MESSAGE_MAP()
 		
@@ -68,6 +71,9 @@ class PlayerTabDialog: public CDialog {
 	protected:
 		// DDX/DDV support
 		virtual void DoDataExchange(CDataExchange* pDX);
+
+		// overrides
+		virtual BOOL OnInitDialog();
 
 		DECLARE_MESSAGE_MAP()
 

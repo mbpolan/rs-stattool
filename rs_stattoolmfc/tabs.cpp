@@ -22,6 +22,9 @@
 #include "stdafx.h"
 #include "rs_stattoolmfc.h"
 #include "tabs.h"
+#include "utilities.h"
+
+/*************************************************************************************/
 
 IMPLEMENT_DYNAMIC(InitialTabDialog, CDialog)
 
@@ -32,12 +35,13 @@ END_MESSAGE_MAP()
 // constructor
 InitialTabDialog::InitialTabDialog(CWnd* pParent /*=NULL*/)
 	: CDialog(InitialTabDialog::IDD, pParent) {
-
 }
 
+// destructor
 InitialTabDialog::~InitialTabDialog() {
 }
 
+// DDX/DDV support
 void InitialTabDialog::DoDataExchange(CDataExchange* pDX) {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_INITIALTITLESTATIC, m_TitleStatic);
@@ -50,6 +54,13 @@ void InitialTabDialog::DoDataExchange(CDataExchange* pDX) {
 	
 	// set the label text
 	m_TitleStatic.SetFont(pfont, true);
+}
+
+// OnInitDialog override
+BOOL InitialTabDialog::OnInitDialog() {
+	CDialog::OnInitDialog();
+	Utils::SetWindowsXPTheme(&this->m_hWnd);
+	return TRUE;
 }
 
 /*************************************************************************************/
@@ -69,18 +80,6 @@ PlayerTabDialog::PlayerTabDialog(CWnd* pParent):
 PlayerTabDialog::~PlayerTabDialog() {
 }
 
-// ddx/ddv support
-void PlayerTabDialog::DoDataExchange(CDataExchange* pDX) {
-	CDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_SKILLTABLE, m_SkillList);
-
-	// add columns
-	m_SkillList.InsertColumn(0, _T("Skill"), LVCFMT_LEFT, 75);
-	m_SkillList.InsertColumn(1, _T("Rank"), LVCFMT_LEFT, 75);
-	m_SkillList.InsertColumn(2, _T("Level"), LVCFMT_LEFT, 75);
-	m_SkillList.InsertColumn(3, _T("Exp"), LVCFMT_LEFT, 75);
-}
-
 // fill in the skill table
 void PlayerTabDialog::SetSkillData(PlayerData pd) {
 	// clear out the list
@@ -98,4 +97,23 @@ void PlayerTabDialog::SetSkillData(PlayerData pd) {
 		m_SkillList.SetItemText(index, 2, s.level);
 		m_SkillList.SetItemText(index, 3, s.xp);
 	}
+}
+
+// ddx/ddv support
+void PlayerTabDialog::DoDataExchange(CDataExchange* pDX) {
+	CDialog::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_SKILLTABLE, m_SkillList);
+
+	// add columns
+	m_SkillList.InsertColumn(0, _T("Skill"), LVCFMT_LEFT, 75);
+	m_SkillList.InsertColumn(1, _T("Rank"), LVCFMT_LEFT, 75);
+	m_SkillList.InsertColumn(2, _T("Level"), LVCFMT_LEFT, 75);
+	m_SkillList.InsertColumn(3, _T("Exp"), LVCFMT_LEFT, 75);
+}
+
+// OnInitDialog override
+BOOL PlayerTabDialog::OnInitDialog() {
+	CDialog::OnInitDialog();
+	Utils::SetWindowsXPTheme(&this->m_hWnd);
+	return TRUE;
 }

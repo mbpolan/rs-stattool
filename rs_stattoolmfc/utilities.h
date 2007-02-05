@@ -23,6 +23,7 @@
 #define UTILITIES_H
 
 #include "io.h"
+#include "stdafx.h"
 
 // Utilities namespace
 namespace Utils {
@@ -41,6 +42,9 @@ CString IntToCString(int a);
 
 // translate an IOHandler to string
 CString TranslateIOError(IOHandler::IOError error);
+
+// set the windows xp theme for a window
+void SetWindowsXPTheme(HWND *hwnd);
 
 }; // namespace Utils
 

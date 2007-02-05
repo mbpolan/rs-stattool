@@ -89,3 +89,21 @@ CString Utils::TranslateIOError(IOHandler::IOError error) {
 	
 	return str;
 }
+
+// set the Windows XP theme for a window
+void Utils::SetWindowsXPTheme(HWND *hwnd) {
+	// first of all, see if we are on windows xp
+	HINSTANCE themeDllHandle = LoadLibrary( _T("UxTheme.dll") );
+	if(themeDllHandle) {
+		// get the address of the dialog texture function
+		EnableThemeDialogTextureFn* pEnableThemeDialogTexture=
+			reinterpret_cast<EnableThemeDialogTextureFn*>(GetProcAddress(
+			themeDllHandle, "EnableThemeDialogTexture"));
+		
+		// call it, if the pointer is valid
+        if(pEnableThemeDialogTexture)
+			pEnableThemeDialogTexture(*hwnd, ETDT_ENABLETAB);
+		
+		FreeLibrary(themeDllHandle);
+	}
+}
