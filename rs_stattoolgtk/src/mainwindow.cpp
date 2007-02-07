@@ -130,7 +130,7 @@ void MainWindow::on_save_player_stats(PlayerData &pd) {
 		
 		// ask the io handler to save this player's stats
 		if (!IOHandler::save_player_stats(sp.path, pd)) {
-			Gtk::MessageDialog md(*this, "Unable to save: an unknown error occurred.");
+			Gtk::MessageDialog md(*this, Utils::translate_io_error(IOHandler::Error));
 			md.run();
 		}
 		
@@ -288,7 +288,7 @@ void MainWindow::construct() {
 	m_AboutDialog->set_name("RuneScape Stat Tool");
 	
 	// version
-	m_AboutDialog->set_version("0.4");
+	m_AboutDialog->set_version("0.5");
 	
 	// comments
 	m_AboutDialog->set_comments("This is a simple tool for fetching "
@@ -305,6 +305,7 @@ void MainWindow::construct() {
 	// layout management
 	// main vbox
 	Gtk::VBox *mvb=manage(new Gtk::VBox);
+	Gtk::VBox *msvb=manage(new Gtk::VBox);
 	
 	// body and status bar hbox
 	Gtk::HBox *shb=manage(new Gtk::HBox);
@@ -318,6 +319,8 @@ void MainWindow::construct() {
 	shb->set_spacing(3);
 	phb->set_spacing(3);
 	mvb->set_spacing(5);
+	msvb->set_border_width(10);
+	msvb->set_spacing(10);
 	
 	// create menus
 	m_Actions=Gtk::ActionGroup::create();
@@ -417,15 +420,17 @@ void MainWindow::construct() {
 	// pack the widgets
 	phb->pack_start(*m_StatusBar);
 	
-	shb->set_border_width(10);
 	shb->pack_start(*m_SearchLabel, Gtk::PACK_SHRINK);
 	shb->pack_start(*m_PlayerEntry);
 	shb->pack_start(*m_SearchButton, Gtk::PACK_SHRINK);
 	
 	mvb->pack_start(*menuhb, Gtk::PACK_SHRINK);
-	mvb->pack_start(*shb, Gtk::PACK_SHRINK);
-	mvb->pack_start(*m_NB);
+	msvb->pack_start(*shb, Gtk::PACK_SHRINK);
+	msvb->pack_start(*m_NB);
+	
+	mvb->pack_start(*msvb);
 	mvb->pack_start(*phb, Gtk::PACK_SHRINK);
+	
 	add(*mvb);
 	
 	// show child widgets

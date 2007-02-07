@@ -66,4 +66,10 @@ void CListView::construct() {
 	append_column("Rank", m_Columns.m_Rank);
 	append_column("Level", m_Columns.m_Level);
 	append_column("Exp", m_Columns.m_Exp);
+	
+	// disable searching
+	set_enable_search(false);
+	
+	// enable clicking headers
+	set_headers_clickable(true);
 }

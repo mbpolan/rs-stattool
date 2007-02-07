@@ -73,6 +73,7 @@ void PlayerView::add_player_tab(const Glib::ustring &name, const PlayerData &dat
 	else {
 		// scrolled window
 		Gtk::ScrolledWindow *sw=manage(new Gtk::ScrolledWindow);
+		sw->set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_ALWAYS);
 		
 		// allocate new list
 		CListView *list=manage(new CListView);

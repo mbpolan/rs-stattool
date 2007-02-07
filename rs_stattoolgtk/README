@@ -2,7 +2,7 @@
 RuneScape Stat Tool
 ===================
 Release date: January 10, 2007
-Version: 0.4
+Version: 0.5
 
 Official homepage: http://rs-stattool.sf.net
 
@@ -26,13 +26,9 @@ stats and allows you to save them, compare users, etc.
 ~~~~~~~~~~~~~~~~~
 2. What's New?
 ~~~~~~~~~~~~~~~~~
-Following the Hunter skill update, the layout of the personal high scores
-page was changed, at least on the HTML code part. The parser has been updated to
-work with the new changes.
+The ability to save/load/compare player stats to file has finally been implemented.
 
-This version has a slightly changed GUI layout to match that of the
-new Windows MFC port. This version was released alongside the Windows
-version to reduce confusion.
+Along with that, the layout has been slightly tweaked to match that of the Windows version.
 
 ~~~~~~~~~~~~~~~~~
 3. Installation
@@ -47,16 +43,33 @@ There are a few dependencies that are required:
 ~~~~~~~~~~~~~~~~~
 4. Usage
 ~~~~~~~~~~~~~~~~~
-At this point, the app is very simple to use. Basically, you just type
-in the desired player's name in the text box. Once you feel confident,
-click the Go button, and the stats will be downloaded.
+The most basic function allows you to fetch a player's stats from the 
+RuneScape high scores page. Simply type in the player's name in the name
+box, and hit Go. The stats will be downloaded and displayed.
 
-You can check the progress by checking the status bar on the bottom. Any
+You can check the progress by looking the status bar on the bottom. Any
 errors will also be displayed.
 
-Additionally, you can compare the skills of two users by going to
-the Tools menu and selecting Compare. Select the two players to
-compare and click OK. The skills will be high-lighted in one of four colors:
+Once you have downloaded a player's stats, you have the possibility of saving them
+to a file for future use. Right click the tab of the player in question, and select
+'Save Stats' to have the information saved to a file with a time stamp. The files can
+be loaded by going to File -> Open. The context menu also provides the ability to refresh
+a player's stats by redownloading them from the RuneScape high scores page. You can view
+some basic information about the player by selecting 'View Info' from that same context menu.
+This will bring up a dialog showing the player's formatted name, total level, and total experience
+points.
+
+Comparing is now slightly different from the previous versions. The feature has
+been made more flexible with the introduction of file comparison. If you want to
+compare two players in real time, make sure you first download their stats. Then, in
+the selection dialog, select their names via the combo boxes. Additionally, if you
+want to compare real time stats with a file, check the box below one of the two
+player group boxes. This will allow you to select a file with which the stats will be
+compared against. You can also do a file-to-file comparison by checking both check boxes
+in the selection dialog. Files include a time stamp, you can have a time reference when
+they were saved.
+
+Skills will be highlighted in one of four colors, as documented here:
 -Green means the first player has the higher skill
 -Red means the second player has the higher skill
 -Yellow means both players have an equal level in the skill (very, very unlikely, but possible)
