@@ -71,6 +71,9 @@ void MainDialog::DoDataExchange(CDataExchange* pDX) {
 	DDX_Control(pDX, IDC_PLAYERNAMEEDIT, m_PlayerNameEdit);
 	DDX_Control(pDX, IDC_GOBUTTON, m_GoButton);
 	DDX_Control(pDX, IDC_PLAYERNOTEBOOK, m_NB);
+
+	// limit player names to 12 characters
+	m_PlayerNameEdit.SetLimitText(12);
 }
 
 // initialization
