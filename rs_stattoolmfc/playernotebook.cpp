@@ -97,14 +97,18 @@ void PlayerNotebook::AddPlayerTab(PlayerData pd) {
 	PlayerData *pdc=new PlayerData(pd);
 	pdc->timestamp="-";
 
+	// calculate the total level and exp
+	pdc->overallExp=Utils::IntToCString(RSParser::CalculateTotalExp(pd));
+	pdc->overallLvl=Utils::IntToCString(RSParser::CalculateTotalLevel(pd));
+
 	// see if a player with this name already exists
 	int i=1; // start at 1 since first tab is not mapped
 	for (std::map<CString, PlayerData*>::iterator it=m_Players.begin(); it!=m_Players.end(); ++it) {
 		// bring the names to lowercase
 		CString s1=(*it).first;
-		s1=s1.MakeLower();
+		s1=RSParser::ValidateName(s1);
 		CString s2=pd.name;
-		s2=s2.MakeLower();
+		s2=RSParser::ValidateName(s2);
 
 		// and compare them
 		if (s1==s2) {
@@ -117,6 +121,7 @@ void PlayerNotebook::AddPlayerTab(PlayerData pd) {
 
 					// delete old data struct and replace it
 					delete m_Players[pd.name];
+					m_Players.erase(pd.name);
 					m_Players[pd.name]=pdc;
 				}
 			}
@@ -125,10 +130,6 @@ void PlayerNotebook::AddPlayerTab(PlayerData pd) {
 		}
 		i++;
 	}
-
-	// calculate the total level and exp
-	pdc->overallExp=Utils::IntToCString(RSParser::CalculateTotalExp(pd));
-	pdc->overallLvl=Utils::IntToCString(RSParser::CalculateTotalLevel(pd));
 
 	// first we create a new tab
 	m_DialogID.push_back(IDD_TABDIALOG);
