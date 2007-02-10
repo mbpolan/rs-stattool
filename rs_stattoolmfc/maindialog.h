@@ -46,10 +46,11 @@ class MainDialog: public CDialog {
 		
 		// msg map functions
 		virtual BOOL OnInitDialog();
+		virtual void OnOK() { };
+		virtual void OnCancel() { };
 		afx_msg void OnPaint();
 		afx_msg HCURSOR OnQueryDragIcon();
-		afx_msg void OnOK() { };
-		afx_msg void OnClose() { };
+		afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 		afx_msg void OnFileOpen();
 		afx_msg void OnFileQuit();
 		afx_msg void OnToolsCompare();
@@ -57,9 +58,9 @@ class MainDialog: public CDialog {
 		afx_msg void OnViewPlayerInfo();
 		afx_msg void OnSaveStats();
 		afx_msg void OnTabsClose();
+		afx_msg void OnTabSelChange(NMHDR *pNMHDR, LRESULT *pResult);
 		afx_msg void OnGoButtonClicked();
 		afx_msg void OnRefresh();
-		afx_msg void OnTabSelChange(NMHDR *pNMHDR, LRESULT *pResult);
 		afx_msg void OnTabRClick(NMHDR *pNMHDR, LRESULT *pResult);
 		afx_msg LRESULT OnThreadStarted(WPARAM wParam, LPARAM lParam);
 		afx_msg LRESULT OnThreadFinished(WPARAM wParam, LPARAM lParam);

@@ -19,7 +19,6 @@
  ***************************************************************************/
 // tabs.h: various dialogs for tab widget
 
-#pragma once
 #include "afxcmn.h"
 #include "common.h"
 #include "afxwin.h"
@@ -44,6 +43,8 @@ class InitialTabDialog: public CDialog {
 
 		// overrides
 		virtual BOOL OnInitDialog();
+		virtual void OnOK() { };
+		virtual void OnCancel() { };
 
 		DECLARE_MESSAGE_MAP()
 		
@@ -74,6 +75,8 @@ class PlayerTabDialog: public CDialog {
 
 		// overrides
 		virtual BOOL OnInitDialog();
+		virtual void OnOK() { };
+		virtual void OnCancel() { };
 
 		DECLARE_MESSAGE_MAP()
 

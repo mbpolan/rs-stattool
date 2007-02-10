@@ -51,6 +51,7 @@ BEGIN_MESSAGE_MAP(MainDialog, CDialog)
 	ON_MESSAGE(WM_RSTHREAD_FINISHED, OnThreadFinished)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_PLAYERNOTEBOOK, OnTabSelChange)
 	ON_NOTIFY(NM_RCLICK, IDC_PLAYERNOTEBOOK, OnTabRClick)
+	ON_WM_SYSCOMMAND()
 END_MESSAGE_MAP()
 
 // constructor
@@ -139,6 +140,14 @@ void MainDialog::OnPaint() {
 // icon drag handler
 HCURSOR MainDialog::OnQueryDragIcon() {
 	return static_cast<HCURSOR>(m_hIcon);
+}
+
+// syscommand handler
+void MainDialog::OnSysCommand(UINT nID, LPARAM lParam) {
+	if ((nID & 0xFFF0)==SC_CLOSE)
+		EndDialog(IDOK);
+	else
+		CDialog::OnSysCommand(nID, lParam);
 }
 
 // file menu open handler
@@ -279,6 +288,17 @@ void MainDialog::OnTabSelChange(NMHDR *pNMHDR, LRESULT *pResult) {
 	*pResult=0;
 }
 
+// right click on tab handler
+void MainDialog::OnTabRClick(NMHDR *pNMHDR, LRESULT *pResult) {
+	// display the context menu at the cursor pos
+	CPoint pos;
+	GetCursorPos(&pos);
+	CMenu *sub=m_PopupMenu.GetSubMenu(0);
+	sub->TrackPopupMenu(0, pos.x, pos.y, this);
+
+	*pResult = 0;
+}
+
 // go button click handler
 void MainDialog::OnGoButtonClicked() {
 	// get the player's name
@@ -303,17 +323,6 @@ void MainDialog::OnRefresh() {
 
 	// get the new data
 	m_Parser.GetPlayerData(name, this);
-}
-
-// right click on tab handler
-void MainDialog::OnTabRClick(NMHDR *pNMHDR, LRESULT *pResult) {
-	// display the context menu at the cursor pos
-	CPoint pos;
-	GetCursorPos(&pos);
-	CMenu *sub=m_PopupMenu.GetSubMenu(0);
-	sub->TrackPopupMenu(0, pos.x, pos.y, this);
-
-	*pResult = 0;
 }
 
 // rs thread started
