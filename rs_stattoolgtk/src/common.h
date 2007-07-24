@@ -29,6 +29,9 @@
 // url to hi score server
 #define RS_HI_SCORES_URL "http://hiscore.runescape.com/lang/en/aff/runescape/hiscorepersonal.ws"
 
+// url to high scores lite server
+#define RS_HI_SCORES_LITE_URL "http://hiscore.runescape.com/index_lite.ws"
+
 // maximum characters allowed in player's name
 #define RS_MAX_PLAYER_NAME_LENGTH	12
 

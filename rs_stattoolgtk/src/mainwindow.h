@@ -90,6 +90,9 @@ class MainWindow: public Gtk::Window {
 		// build the ui
 		void construct();
 		
+		// delete event handler
+		virtual bool on_delete_event(GdkEventAny *e);
+		
 		// buttons
 		Gtk::Button *m_SearchButton;
 		

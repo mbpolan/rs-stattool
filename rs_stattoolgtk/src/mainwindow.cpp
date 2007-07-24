@@ -69,7 +69,7 @@ void MainWindow::on_search_button_clicked() {
 // refresh player stats button
 void MainWindow::on_refresh_player(const Glib::ustring &name) {
 	// connect and get the updated data
-	m_Parser->get_player_data(m_PlayerEntry->get_text());
+	m_Parser->get_player_data(name);
 }
 
 // transfer begin handler
@@ -90,9 +90,9 @@ void MainWindow::on_data_ready(int code, char *data) {
 		return;
 	}
 	
-	// parse the html data
+	// parse the received string
 	bool ok;
-	PlayerData player=m_Parser->parse_html(data, &ok);
+	PlayerData player=m_Parser->parse_string(data, &ok);
 	
 	// see if the player exists
 	if (!ok) {
@@ -100,7 +100,8 @@ void MainWindow::on_data_ready(int code, char *data) {
 		m_StatusBar->push("** Player is not in the high scores **");
 	}
 	
-	else {
+	// prevent useless transfers from showing up as new tabs
+	else if (player.name.size()>0) {
 		// and add a player tab
 		m_NB->add_player_tab(player.name, player);
 		m_NB->set_current_page(-1);
@@ -436,4 +437,9 @@ void MainWindow::construct() {
 	
 	// show child widgets
 	show_all_children();
+}
+
+// delete event handler
+bool MainWindow::on_delete_event(GdkEventAny *e) {
+	m_SigQuit.emit();
 }

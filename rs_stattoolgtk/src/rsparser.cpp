@@ -33,9 +33,12 @@ RSParser::RSParser() {
 }
 
 void RSParser::get_player_data(const Glib::ustring &name) {
+	// cache our player's name
+	m_CurrentPlayer=validate_name(name);
+	
 	// create a new handler thread
 	m_Threads.push_back(Glib::Thread::create(
-			sigc::bind(sigc::mem_fun(*this, &RSParser::thread_get_player_data), name),
+			sigc::bind(sigc::mem_fun(*this, &RSParser::thread_get_player_data), m_CurrentPlayer),
 			false));
 	
 	// connect dispatcher signals
@@ -133,6 +136,88 @@ PlayerData RSParser::parse_html(char *data, bool *ok) {
 	return player;
 }
 
+// parse raw high scores string
+PlayerData RSParser::parse_string(char *string, bool *ok) {
+	// allocate a player struct
+	PlayerData player;
+	player.name=m_CurrentPlayer;
+	
+	// clear the cached name
+	m_CurrentPlayer="";
+	
+	// form a ustring from the raw c string
+	Glib::ustring str=Glib::ustring(string);
+	
+	// check if this player is in the high scores at all
+	if (str.find("Page not found")!=-1) {
+		*ok=false;
+		return player;
+	}
+	
+	// string names of skills (in order of appearance on personl score page)
+	char *skills[] = { "Attack", "Defence", "Strength", "Hitpoints", "Ranged",
+		           "Prayer", "Magic", "Cooking", "Woodcutting", "Fletching",
+                           "Fishing", "Firemaking", "Crafting", "Smithing", "Mining",
+                           "Herblore", "Agility", "Thieving", "Slayer", "Farming",
+                           "Runecraft", "Hunter", "Construction" };
+	
+	// first, we parse the overall data
+	// rank
+	int npos1=str.find(",");
+	player.overallRank=str.substr(0, npos1);
+	str.erase(0, npos1+1);
+	
+	// level
+	npos1=str.find(",");
+	player.overallLvl=str.substr(0, npos1);
+	str.erase(0, npos1+1);
+	
+	// exp
+	npos1=str.find('\n');
+	player.overallExp=str.substr(0, npos1);
+	str.erase(0, npos1+1);
+	
+	// iterate over skills
+	for (int i=0; i<SKILL_COUNT; i++) {
+		SkillData sk;
+		
+		// set the name
+		sk.name=skills[i];
+		
+		// parse rank
+		npos1=str.find(",");
+		sk.rank=str.substr(0, npos1);
+		str.erase(0, npos1+1);
+		
+		// parse level
+		npos1=str.find(",");
+		sk.level=str.substr(0, npos1);
+		str.erase(0, npos1+1);
+		
+		// parse exp
+		npos1=str.find('\n');
+		sk.xp=str.substr(0, npos1);
+		str.erase(0, npos1+1);
+		
+		// verify stats since some might not be available
+		if (sk.rank=="-1")
+			sk.rank="-";
+		
+		if (sk.level=="1")
+			sk.level="-";
+		
+		if (sk.xp=="0")
+			sk.xp="-";
+		
+		// add the skill
+		player.skills[i]=sk;
+	}
+	
+	// we're done
+	*ok=true;
+	return player;
+}
+
 void RSParser::on_process_transfer_start() {
 	// emit the actual transfer_start signal
 	signal_transfer_start.emit();
@@ -152,13 +237,13 @@ void RSParser::thread_get_player_data(const Glib::ustring &name) {
 	// get curl handle
 	CURL *handle=curl_easy_init();
 	
-	// post fields
-	Glib::ustring pfields="user1=";
-	pfields+=validate_name(name);
+	// form the url
+	Glib::ustring url=RS_HI_SCORES_LITE_URL;
+	url+="?player=";
+	url+=name;
 	
 	// set options
-	curl_easy_setopt(handle, CURLOPT_POSTFIELDS, pfields.c_str());
-	curl_easy_setopt(handle, CURLOPT_URL, RS_HI_SCORES_URL);
+	curl_easy_setopt(handle, CURLOPT_URL, url.c_str());
 	curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, &RSParser::curl_write_func);
 	curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void*) &m_Chunk);
 	

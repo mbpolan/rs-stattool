@@ -42,7 +42,11 @@ class RSParser: public sigc::trackable {
 		void get_player_data(const Glib::ustring &name);
 		
 		// parse html data
+		// NOTE: this is now deprecated
 		PlayerData parse_html(char *data, bool *ok);
+		
+		// parse raw high scores string
+		PlayerData parse_string(char *string, bool *ok);
 		
 		// get transfer data
 		TransferData get_transfer_data() const { return m_Data; };
@@ -73,6 +77,9 @@ class RSParser: public sigc::trackable {
 		
 		// validate player's name
 		Glib::ustring validate_name(const Glib::ustring &name);
+		
+		// the current player being downloaded
+		Glib::ustring m_CurrentPlayer;
 		
 		// curl data from previous session
 		MemChunk m_Chunk;
