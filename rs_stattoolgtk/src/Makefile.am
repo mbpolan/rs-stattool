@@ -4,7 +4,7 @@ rs_stattoolgtk_SOURCES = rs_stattoolgtk.cpp dialogs.cpp mainwindow.cpp playervie
 			 io.cpp comparedialog.cpp comparelistview.cpp
 
 # set the include path found by configure
-INCLUDES= $(all_includes)
+INCLUDES= $(all_includes) -I/usr/include/cairo
 
 # the library search path.
 rs_stattoolgtk_LDFLAGS = $(all_libraries)

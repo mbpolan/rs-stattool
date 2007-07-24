@@ -23,17 +23,17 @@
 #define MAINWINDOW_H
 
 // gtk includes
+#include <gtkmm/aboutdialog.h>
 #include <gtkmm/actiongroup.h>
+#include <gtkmm/button.h>
+#include <gtkmm/entry.h>
+#include <gtkmm/label.h>
+#include <gtkmm/statusbar.h>
 #include <gtkmm/window.h>
 #include <gtkmm/uimanager.h>
 #include "common.h"
 
 // forward declarations
-class Gtk::AboutDialog;
-class Gtk::Button;
-class Gtk::Entry;
-class Gtk::Label;
-class Gtk::Statusbar;
 class CompareDialog;
 class PlayerView;
 class RSParser;
@@ -47,7 +47,13 @@ class MainWindow: public Gtk::Window {
 		// destructor
 		~MainWindow();
 		
+		// quit signal
+		sigc::signal<void> signal_quit() const { return m_SigQuit; }
+		
 	protected:
+		// signals
+		sigc::signal<void> m_SigQuit;
+		
 		/////////////////////////////
 		// signal handlers
 		/////////////////////////////
@@ -105,7 +111,7 @@ class MainWindow: public Gtk::Window {
 		Gtk::Statusbar *m_StatusBar;
 		
 		// about dialog
-		Gtk::AboutDialog *m_AboutDialog;
+		Gtk::AboutDialog m_AboutDialog;
 		
 		// dialogs
 		CompareDialog *m_CompareDialog;

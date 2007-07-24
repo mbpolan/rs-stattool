@@ -43,7 +43,7 @@
 MainWindow::MainWindow(): 
 		Gtk::Window(Gtk::WINDOW_TOPLEVEL) {
 	// window title
-	set_title("RS Stat Tool");
+	set_title("RuneScape Stat Tool");
 	
 	// set the minimum width
 	set_size_request(400, 320);
@@ -57,7 +57,6 @@ MainWindow::MainWindow():
 MainWindow::~MainWindow() {
 	// free memory
 	delete m_Parser;
-	delete m_AboutDialog;
 	delete m_CompareDialog;
 }
 
@@ -223,7 +222,8 @@ void MainWindow::on_compare_players() {
 // about signal handler
 void MainWindow::on_about() {
 	// bring up the about dialog
-	m_AboutDialog->run();
+	m_AboutDialog.run();
+	m_AboutDialog.hide();
 }
 
 // open player stats handler
@@ -259,6 +259,9 @@ void MainWindow::on_open() {
 void MainWindow::on_quit() {
 	// hide the main window; ends gtk event loop
 	hide();
+	
+	// emit the quit signal
+	m_SigQuit.emit();
 }
 
 // build the ui
@@ -277,21 +280,19 @@ void MainWindow::construct() {
 	
 	///////////////////////////////////////////////
 	// dialog allocation
-	m_AboutDialog=new Gtk::AboutDialog;
-	
 	// author
 	std::vector<Glib::ustring> author;
 	author.push_back("Mike Polan (kanadakid@gmail.com)");
-	m_AboutDialog->set_authors(author);
+	m_AboutDialog.set_authors(author);
 	
 	// name
-	m_AboutDialog->set_name("RuneScape Stat Tool");
+	m_AboutDialog.set_name("RuneScape Stat Tool");
 	
 	// version
-	m_AboutDialog->set_version("0.5");
+	m_AboutDialog.set_version("0.5");
 	
 	// comments
-	m_AboutDialog->set_comments("This is a simple tool for fetching "
+	m_AboutDialog.set_comments("This is a simple tool for fetching "
 			 	    "player stats. To search a user, type in "
 				    "his or her name in the above box, and click "
 				    "the Go button.");
