@@ -32,13 +32,39 @@
 RSParser::RSParser() {
 }
 
+// reformats a player name to make it follow runescape standards
+Glib::ustring RSParser::reformat_name(const Glib::ustring &name) {
+	Glib::ustring str=name;
+	char buf[str.size()+1];
+	
+	// capitalize the first letter, if any
+	if (IS_LOWERCASE_ALPHA(str[0]))
+		buf[0]=(char) str[0]-0x20;
+	
+	// iterate over the string, and capitalize any letters following an underscore or a space
+	for (int i=1; i<str.size(); i++) {
+		char cur=str[i];
+		char prev=str[i-1];
+		
+		if ((prev==' ' || prev=='_') && IS_LOWERCASE_ALPHA(cur))
+			buf[i]=(char) cur-0x20;
+		else
+			buf[i]=cur;
+	}
+	
+	// make sure to null-terminate the string
+	buf[str.size()]='\0';
+	
+	return Glib::ustring(buf);
+}
+
 void RSParser::get_player_data(const Glib::ustring &name) {
 	// cache our player's name
-	m_CurrentPlayer=validate_name(name);
+	m_CurrentPlayer=reformat_name(name);
 	
 	// create a new handler thread
 	m_Threads.push_back(Glib::Thread::create(
-			sigc::bind(sigc::mem_fun(*this, &RSParser::thread_get_player_data), m_CurrentPlayer),
+			sigc::bind(sigc::mem_fun(*this, &RSParser::thread_get_player_data), validate_name(name)),
 			false));
 	
 	// connect dispatcher signals

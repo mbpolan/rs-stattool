@@ -37,6 +37,9 @@ class RSParser: public sigc::trackable {
 		// constructor
 		RSParser();
 		
+		// reformats a player name to make it follow runescape standards
+		Glib::ustring reformat_name(const Glib::ustring &name);
+		
 		// get data about a player
 		// emits the data_ready signal when done
 		void get_player_data(const Glib::ustring &name);

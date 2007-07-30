@@ -26,6 +26,9 @@
 #include <glibmm/thread.h>
 #include <glibmm/ustring.h>
 
+// check if a character is a lowercase letter
+#define IS_LOWERCASE_ALPHA(a) (a>=0x61 && a<=0x7A)
+
 // url to hi score server
 #define RS_HI_SCORES_URL "http://hiscore.runescape.com/lang/en/aff/runescape/hiscorepersonal.ws"
 
