@@ -34,22 +34,31 @@ RSParser::RSParser() {
 
 // reformats a player name to make it follow runescape standards
 Glib::ustring RSParser::reformat_name(const Glib::ustring &name) {
-	Glib::ustring str=name;
+	// first, make the entire string lowercase
+	Glib::ustring str=name.lowercase();
+	
+	// allocate a buffer
 	char buf[str.size()+1];
 	
 	// capitalize the first letter, if any
 	if (IS_LOWERCASE_ALPHA(str[0]))
-		buf[0]=(char) str[0]-0x20;
+		buf[0]=toupper(str[0]);
 	
 	// iterate over the string, and capitalize any letters following an underscore or a space
 	for (int i=1; i<str.size(); i++) {
 		char cur=str[i];
 		char prev=str[i-1];
 		
+		// capitalize the previous character is this one is either a space or underscore
 		if ((prev==' ' || prev=='_') && IS_LOWERCASE_ALPHA(cur))
-			buf[i]=(char) cur-0x20;
-		else
-			buf[i]=cur;
+			buf[i]=toupper(cur);
+		else {
+			// replace underscores with spaces
+			if (cur=='_')
+				buf[i]=' ';
+			else
+				buf[i]=cur;
+		}
 	}
 	
 	// make sure to null-terminate the string
@@ -190,7 +199,7 @@ PlayerData RSParser::parse_string(char *string, bool *ok) {
 	// first, we parse the overall data
 	// rank
 	int npos1=str.find(",");
-	player.overallRank=str.substr(0, npos1);
+	player.overallRank=Utils::format_numeric(str.substr(0, npos1));
 	str.erase(0, npos1+1);
 	
 	// level
@@ -200,7 +209,7 @@ PlayerData RSParser::parse_string(char *string, bool *ok) {
 	
 	// exp
 	npos1=str.find('\n');
-	player.overallExp=str.substr(0, npos1);
+	player.overallExp=Utils::format_numeric(str.substr(0, npos1));
 	str.erase(0, npos1+1);
 	
 	// iterate over skills
@@ -212,7 +221,7 @@ PlayerData RSParser::parse_string(char *string, bool *ok) {
 		
 		// parse rank
 		npos1=str.find(",");
-		sk.rank=str.substr(0, npos1);
+		sk.rank=Utils::format_numeric(str.substr(0, npos1));
 		str.erase(0, npos1+1);
 		
 		// parse level
@@ -222,7 +231,7 @@ PlayerData RSParser::parse_string(char *string, bool *ok) {
 		
 		// parse exp
 		npos1=str.find('\n');
-		sk.xp=str.substr(0, npos1);
+		sk.xp=Utils::format_numeric(str.substr(0, npos1));
 		str.erase(0, npos1+1);
 		
 		// verify stats since some might not be available

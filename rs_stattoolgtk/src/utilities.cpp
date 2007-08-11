@@ -22,6 +22,7 @@
 // necessary includes
 #include <sstream>
 #include <stdlib.h>
+#include <cmath>
 
 // project includes
 #include "common.h"
@@ -73,4 +74,21 @@ Glib::ustring Utils::translate_io_error(IOHandler::IOError error) {
 	}
 	
 	return str;
+}
+
+// format a numeric string with comma separators
+Glib::ustring Utils::format_numeric(const Glib::ustring &str) {
+	Glib::ustring numStr=str;
+	
+	// after every triplet, insert a comma
+	for (int i=str.size()-3; i>=0; i-=3) {
+		numStr.insert(i, ",");
+	}
+	
+	// remove surplus commas
+	if (numStr[0]==',')
+		numStr.erase(0, 1);
+	
+	return numStr;
+	
 }

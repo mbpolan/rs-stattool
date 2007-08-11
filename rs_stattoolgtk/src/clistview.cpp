@@ -38,6 +38,11 @@ void CListView::populate(const PlayerData &data) {
 	// clear out rows
 	m_Model->clear();
 	
+	// copy total data
+	m_PlayerTotalLevel=data.overallLvl;
+	m_PlayerTotalExp=data.overallExp;
+	m_PlayerTotalRank=data.overallRank;
+	
 	// iterate over skills
 	for (int i=0; i<SKILL_COUNT; i++) {
 		SkillData s=data.skills[i];
@@ -51,6 +56,13 @@ void CListView::populate(const PlayerData &data) {
 		row[m_Columns.m_Level]=s.level;
 		row[m_Columns.m_Exp]=s.xp;
 	}
+}
+
+// get the overall data
+void CListView::get_overall_data(Glib::ustring &level, Glib::ustring &exp, Glib::ustring &rank) {
+	level=m_PlayerTotalLevel;
+	exp=m_PlayerTotalExp;
+	rank=m_PlayerTotalRank;
 }
 
 // build the widget

@@ -43,6 +43,9 @@ class CListView: public Gtk::TreeView {
 		
 		// return list of rows
 		Gtk::TreeModel::Children get_rows() const { return m_Model->children(); };
+		
+		// get the overall data
+		void get_overall_data(Glib::ustring &level, Glib::ustring &exp, Glib::ustring &rank);
 
 	protected:
 		// build the widget
@@ -70,6 +73,11 @@ class CListView: public Gtk::TreeView {
 		
 		// model instance
 		Glib::RefPtr<Gtk::ListStore> m_Model;
+		
+		// store overall data
+		Glib::ustring m_PlayerTotalLevel;
+		Glib::ustring m_PlayerTotalExp;
+		Glib::ustring m_PlayerTotalRank;
 		
 	public:
 		// column record

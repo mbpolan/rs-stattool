@@ -41,6 +41,9 @@ Glib::ustring int_to_ustring(int a);
 // translate an IOHandler error to string
 Glib::ustring translate_io_error(IOHandler::IOError error);
 
+// format a numeric string with comma separators
+Glib::ustring format_numeric(const Glib::ustring &str);
+
 }; // namespace Utils
 
 #endif

@@ -123,9 +123,8 @@ PlayerData PlayerView::get_player_data(const Glib::ustring &name) {
 		Gtk::TreeModel::Children lrows=list->get_rows();
 		Gtk::TreeModel::Children::iterator it=lrows.begin();
 		
-		// totals
-		int tlevel=0;
-		long texp=0;
+		// get overall data
+		list->get_overall_data(player.overallLvl, player.overallExp, player.overallRank);
 		
 		// iterate over rows
 		int c=0;
@@ -142,7 +141,6 @@ PlayerData PlayerView::get_player_data(const Glib::ustring &name) {
 			
 			// convert to integer
 			int ilvl=Utils::ustring_to_int(lvl);
-			tlevel+=ilvl;
 			
 			// get exp
 			Glib::ustring exp=(*it)[list->m_Columns.m_Exp];
@@ -150,7 +148,6 @@ PlayerData PlayerView::get_player_data(const Glib::ustring &name) {
 			
 			// convert to integer
 			int iexp=Utils::ustring_to_int(exp);
-			texp+=iexp;
 			
 			// get rank
 			skill.rank=(*it)[list->m_Columns.m_Rank];
@@ -161,10 +158,6 @@ PlayerData PlayerView::get_player_data(const Glib::ustring &name) {
 		
 		// no timestamp
 		player.timestamp="-";
-		
-		// convert totals back to ustring
-		player.overallLvl=Utils::int_to_ustring(tlevel);
-		player.overallExp=Utils::int_to_ustring(texp);
 	}
 	
 	return player;

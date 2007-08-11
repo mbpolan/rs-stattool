@@ -78,9 +78,19 @@ InfoDialog::InfoDialog() {
 void InfoDialog::set_player(const PlayerData &player) {
 	// set text
 	m_NameLabel->set_text(player.name);
-	m_TLvlLabel->set_text(player.overallLvl);
-	m_TExpLabel->set_text(player.overallExp);
-	m_RankLabel->set_text(player.overallRank);
+	
+	// make sure this player's info is ranked
+	if (player.overallRank=="-1") {
+		m_TLvlLabel->set_text("Not ranked");
+		m_TExpLabel->set_text("Not ranked");
+		m_RankLabel->set_text("Not ranked");
+	}
+	
+	else {
+		m_TLvlLabel->set_text(player.overallLvl);
+		m_TExpLabel->set_text(player.overallExp);
+		m_RankLabel->set_text(player.overallRank);
+	}
 	
 	show_all_children();
 }
