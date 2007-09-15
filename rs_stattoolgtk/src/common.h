@@ -103,6 +103,12 @@ typedef struct {
 	int code;
 } TransferData;
 
+// program state
+typedef struct {
+	// if x button quits the program
+	bool xclose;
+} AppState;
+
 /////////////////////////////////////////////
 // memory management
 /////////////////////////////////////////////

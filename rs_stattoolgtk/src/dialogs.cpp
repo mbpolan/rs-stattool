@@ -338,8 +338,73 @@ void SaveDialog::on_file_button_clicked() {
 	Gtk::FileChooserDialog fcd(*this, "Save Stats", Gtk::FILE_CHOOSER_ACTION_SAVE);
 	fcd.add_button("Save", 1);
 	fcd.add_button("Cancel", 0);
+	
+	// add a filter
+	Gtk::FileFilter filter;
+	filter.add_pattern("*.rsp");
+	filter.set_name("Player Stats Files (*.rsp)");
+	fcd.add_filter(filter);
+	
 	if (fcd.run()) {
 		// update the entry
 		m_FilePathEntry->set_text(fcd.get_filename());
 	}
+}
+
+/******************************************************************************************/
+
+// preferences dialog constructor
+PreferencesDialog::PreferencesDialog() {
+	construct();
+}
+
+// set preferences based on AppState
+void PreferencesDialog::set_preferences(const AppState &state) {
+	// set check buttons
+	m_CloseXCB->set_active(state.xclose);
+}
+
+// get the preferences state in the form of an AppState struct
+AppState PreferencesDialog::get_preferences() {
+	// prepare a new appstate struct
+	AppState state;
+	
+	// set check buttons
+	state.xclose=m_CloseXCB->get_active();
+	
+	return state;
+}
+
+// build the ui
+void PreferencesDialog::construct() {
+	// get the main vbox
+	Gtk::VBox *vb=get_vbox();
+	vb->set_spacing(5);
+	vb->set_border_width(5);
+	
+	// allocate notebook
+	m_Notebook=manage(new Gtk::Notebook);
+	
+	// allocate general table
+	Gtk::Table *generalTbl=manage(new Gtk::Table);
+	generalTbl->set_spacings(5);
+	generalTbl->set_border_width(5);
+	
+	// allocate check buttons for general tab
+	m_CloseXCB=manage(new Gtk::CheckButton("Clicking 'X' button quits the program"));
+	
+	// place widgets in general tab
+	generalTbl->attach(*m_CloseXCB, 0, 1, 0, 1, Gtk::FILL | Gtk::EXPAND, Gtk::SHRINK | Gtk::SHRINK);
+	
+	// append pages
+	m_Notebook->append_page(*generalTbl, "General");
+	
+	// place containers
+	vb->pack_start(*m_Notebook);
+	
+	// add buttons
+	add_button("OK", 1);
+	add_button("Cancel", 0);
+	
+	show_all_children();
 }

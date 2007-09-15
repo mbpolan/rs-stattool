@@ -28,7 +28,7 @@
 // project includes
 #include "mainwindow.h"
 
-static void on_app_quit(Gtk::Main *app);
+static void on_app_quit(bool appQuit, Gtk::Main *app);
 
 // signal handler for signal_activate
 static void on_icon_activate(GtkWidget *widget, gpointer data) {
@@ -57,11 +57,11 @@ static void on_icon_popup_menu(GtkWidget *widget, guint button, guint atime, gpo
 static void on_mainwindow_hide(MainWindow *mw, Glib::RefPtr<Gtk::StatusIcon> icon, Gtk::Main *app) {
 	// close the application if the status icon is not embedded
 	if (!icon->is_embedded())
-		on_app_quit(app);
+		on_app_quit(true, app);
 }
 
 // signal handler for context menu and mainwindow quit commands
-static void on_app_quit(Gtk::Main *app) {
+static void on_app_quit(bool appQuit, Gtk::Main *app) {
 	app->quit();
 }
 
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
 	Glib::RefPtr<Gtk::StatusIcon> sIcon=Gtk::StatusIcon::create_from_file("status.png");
 	if (!sIcon || !sIcon->get_pixbuf()) {
 		// try again, this time with a stock icon
-		sIcon=Gtk::StatusIcon::create(Gtk::Stock::MISSING_IMAGE);
+		sIcon=Gtk::StatusIcon::create(Gtk::Stock::NETWORK);
 	}
 	
 	// main window allocation
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
 		
 		// connect menu signals
 		showItem.signal_activate().connect(sigc::bind(sigc::ptr_fun(on_icon_activate), (GtkWidget*) gsIcon, (gpointer) &mw));
-		quitItem.signal_activate().connect(sigc::bind(sigc::ptr_fun(on_app_quit), &app));
+		quitItem.signal_activate().connect(sigc::bind(sigc::ptr_fun(on_app_quit), true, &app));
 		
 		app.run();
 	}

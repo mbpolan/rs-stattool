@@ -47,7 +47,9 @@ MainWindow::MainWindow():
 	
 	// set the minimum width
 	set_size_request(400, 320);
-	set_resizable(false);
+	
+	// set default appstate values
+	m_AppState.xclose=true;
 	
 	// build the ui
 	construct();
@@ -238,7 +240,7 @@ void MainWindow::on_open() {
 	Gtk::FileFilter filter;
 	filter.set_name("Player Stat Files (*.rsp)");
 	filter.add_pattern("*.rsp");
-	fcd.set_filter(filter);
+	fcd.add_filter(filter);
 	
 	if (fcd.run()) {
 		// get the path
@@ -258,11 +260,24 @@ void MainWindow::on_open() {
 
 // quit signal handler
 void MainWindow::on_quit() {
-	// hide the main window; ends gtk event loop
+	// hide the main window
 	hide();
 	
 	// emit the quit signal
-	m_SigQuit.emit();
+	m_SigQuit.emit(m_AppState.xclose);
+}
+
+// edit preferences handler
+void MainWindow::on_edit_preferences() {
+	// prepare a preferences dialog
+	PreferencesDialog pd;
+	pd.set_preferences(m_AppState);
+	
+	// run the dialog
+	if (pd.run()) {
+		// update app state
+		m_AppState=pd.get_preferences();
+	}
 }
 
 // build the ui
@@ -290,7 +305,7 @@ void MainWindow::construct() {
 	m_AboutDialog.set_name("RuneScape Stat Tool");
 	
 	// version
-	m_AboutDialog.set_version("0.5");
+	m_AboutDialog.set_version("0.6");
 	
 	// comments
 	m_AboutDialog.set_comments("This is a simple tool for fetching "
@@ -333,15 +348,19 @@ void MainWindow::construct() {
 	m_Actions->add(Gtk::Action::create("FileQuit", Gtk::Stock::QUIT, "_Quit", "Quit the program"),
 		       sigc::mem_fun(*this, &MainWindow::on_quit));
 	
+	m_Actions->add(Gtk::Action::create("EditPrefs", Gtk::Stock::PREFERENCES, "_Preferences", "Change various program preferences"),
+		       sigc::mem_fun(*this, &MainWindow::on_edit_preferences));
+	
 	m_Actions->add(Gtk::Action::create("ToolsCompare", "_Compare", "Compare two players"),
 		       sigc::mem_fun(*this, &MainWindow::on_compare_players));
 	
 	m_Actions->add(Gtk::Action::create("HelpAbout", Gtk::Stock::ABOUT, "_About", "About this program"),
 		       sigc::mem_fun(*this, &MainWindow::on_about));
 	
-	m_Actions->add(Gtk::Action::create("FileMenu", "File"));
-	m_Actions->add(Gtk::Action::create("ToolsMenu", "Tools"));
-	m_Actions->add(Gtk::Action::create("HelpMenu", "Help"));
+	m_Actions->add(Gtk::Action::create("FileMenu", "_File"));
+	m_Actions->add(Gtk::Action::create("EditMenu", "_Edit"));
+	m_Actions->add(Gtk::Action::create("ToolsMenu", "_Tools"));
+	m_Actions->add(Gtk::Action::create("HelpMenu", "_Help"));
 	
 	// create ui manager
 	m_UI=Gtk::UIManager::create();
@@ -356,6 +375,9 @@ void MainWindow::construct() {
 	"			<separator/>"
 	"			<menuitem action='FileQuit'/>"
 	"		</menu>"
+	//"		<menu action='EditMenu'>"
+	//"			<menuitem action='EditPrefs'/>"
+	//"		</menu>"
 	"		<menu action='ToolsMenu'>"
 	"			<menuitem action='ToolsCompare'/>"
 	"		</menu>"
@@ -441,5 +463,5 @@ void MainWindow::construct() {
 
 // delete event handler
 bool MainWindow::on_delete_event(GdkEventAny *e) {
-	m_SigQuit.emit();
+	m_SigQuit.emit(m_AppState.xclose);
 }

@@ -48,11 +48,11 @@ class MainWindow: public Gtk::Window {
 		~MainWindow();
 		
 		// quit signal
-		sigc::signal<void> signal_quit() const { return m_SigQuit; }
+		sigc::signal<void, bool> signal_quit() const { return m_SigQuit; }
 		
 	protected:
 		// signals
-		sigc::signal<void> m_SigQuit;
+		sigc::signal<void, bool> m_SigQuit;
 		
 		/////////////////////////////
 		// signal handlers
@@ -84,6 +84,9 @@ class MainWindow: public Gtk::Window {
 		
 		// quit signal handler
 		void on_quit();
+		
+		// edit preferences handler
+		void on_edit_preferences();
 		
 		/////////////////////////////
 		
@@ -121,6 +124,9 @@ class MainWindow: public Gtk::Window {
 		
 		// rs parser
 		RSParser *m_Parser;
+		
+		// internal application state
+		AppState m_AppState;
 };
 
 #endif

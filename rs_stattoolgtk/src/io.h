@@ -22,6 +22,7 @@
 #ifndef IO_H
 #define IO_H
 
+#include <libxml/tree.h>
 #include "common.h"
 
 // class for managing I/O operations
@@ -41,6 +42,15 @@ class IOHandler {
 		
 		// load player stats from file
 		static bool load_player_stats(const Glib::ustring &path, PlayerData &pd);
+		
+		// save config to file
+		static bool save_config(const Glib::ustring &path, AppState &state);
+		
+		// load config from file
+		static bool load_config(const Glib::ustring &path, AppState &state);
+		
+		// writes a config value to xml
+		static void write_xml_int(xmlNodePtr parent, const Glib::ustring &nodeName, int value);
 		
 		// global IO error
 		static IOError Error;

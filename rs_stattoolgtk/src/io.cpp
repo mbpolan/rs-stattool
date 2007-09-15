@@ -22,6 +22,8 @@
 #include <glibmm.h>
 #include <cstdio>
 #include <ctime>
+#include <libxml/parser.h>
+#include <sstream>
 #include "io.h"
 
 IOHandler::IOError IOHandler::Error=IOHandler::IO_NO_ERROR;
@@ -35,7 +37,7 @@ void IOHandler::write_string(FILE *f, const Glib::ustring &str) {
 	// write the string itself
 	for (int i=0; i<len; i++)
 		fputc(str[i], f);
-};
+}
 
 // read a string value
 Glib::ustring IOHandler::read_string(FILE *f) {
@@ -50,7 +52,7 @@ Glib::ustring IOHandler::read_string(FILE *f) {
 		str+=(char) fgetc(f);
 	
 	return str;
-};
+}
 
 // save player stats to file
 bool IOHandler::save_player_stats(const Glib::ustring &path, PlayerData pd) {
@@ -97,7 +99,7 @@ bool IOHandler::save_player_stats(const Glib::ustring &path, PlayerData pd) {
 	fclose(f);
 	IOHandler::Error=IOHandler::IO_NO_ERROR;
 	return true;
-};
+}
 
 // load player stats from file
 bool IOHandler::load_player_stats(const Glib::ustring &path, PlayerData &pd) {
@@ -156,4 +158,77 @@ bool IOHandler::load_player_stats(const Glib::ustring &path, PlayerData &pd) {
 	fclose(f);
 	IOHandler::Error=IOHandler::IO_NO_ERROR;
 	return true;
-};
+}
+
+// save config to file
+bool IOHandler::save_config(const Glib::ustring &path, AppState &state) {
+	LIBXML_TEST_VERSION;
+	
+	// create a new document
+	xmlDocPtr doc=xmlNewDoc((const xmlChar*) "1.0");
+	xmlNodePtr root=xmlNewNode(NULL, (const xmlChar*) "config");
+	xmlDocSetRootElement(doc, root);
+	
+	// write app state values
+	write_xml_int(root, "xclose", state.xclose);
+	
+	// dump the document
+	xmlSaveFormatFileEnc(path.c_str(), doc, "UTF-8", 1);
+	xmlFreeDoc(doc);
+	
+	IOHandler::Error=IOHandler::IO_NO_ERROR;
+	return true;
+}
+
+// load config from file
+bool IOHandler::load_config(const Glib::ustring &path, AppState &state) {
+	// open the specified path
+	xmlDocPtr doc=xmlParseFile(path.c_str());
+	if (!doc) {
+		IOHandler::Error=IOHandler::IO_OPEN_FAIL;
+		return false;
+	}
+	
+	// get the root node
+	xmlNodePtr root=xmlDocGetRootElement(doc);
+	
+	// read application states
+	xmlNodePtr child=root->children;
+	while(child) {
+		// get value
+		const char *value=(const char*) xmlGetProp(child, (const xmlChar*) "value");
+		if (!value) {
+			child=child->next;
+			continue;
+		}
+		
+		// get the tag
+		if (child->name==(const xmlChar*) "xclose") {
+			// convert to integer
+			state.xclose=(bool) atoi(value);
+		}
+		
+		child=child->next;
+	}
+	
+	// release memory
+	xmlFreeDoc(doc);
+	
+	// close the file
+	IOHandler::Error=IOHandler::IO_NO_ERROR;
+	return true;
+}
+
+// writes a config value to xml
+void IOHandler::write_xml_int(xmlNodePtr parent, const Glib::ustring &nodeName, int value) {
+	// create a child node
+	xmlNodePtr node=xmlNewChild(parent, NULL, (const xmlChar*) nodeName.c_str(), NULL);
+	
+	// stringstream for converting values
+	std::stringstream ss;
+	
+	// set properties
+	ss << value;
+	xmlSetProp(node, (const xmlChar*) "value", (const xmlChar*) ss.str().c_str());
+	ss.str("");
+}

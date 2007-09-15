@@ -29,7 +29,10 @@
 #include <gtkmm/frame.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/label.h>
+#include <gtkmm/notebook.h>
 #include <gtkmm/checkbutton.h>
+
+#include "common.h"
 #include "playerview.h"
 
 // dialog for choosing players to compare
@@ -133,6 +136,31 @@ class SaveDialog: public Gtk::Dialog {
 		
 		// entry for path name
 		Gtk::Entry *m_FilePathEntry;
+};
+
+/***************************************************************************/
+
+// dialog used to changed preferences
+class PreferencesDialog: public Gtk::Dialog {
+	public:
+		// constructor
+		PreferencesDialog();
+		
+		// set preferences based on AppState
+		void set_preferences(const AppState &state);
+		
+		// get the preferences state in the form of an AppState struct
+		AppState get_preferences();
+	
+	protected:
+		// build the ui
+		void construct();
+		
+		// notebook
+		Gtk::Notebook *m_Notebook;
+		
+		// check buttons
+		Gtk::CheckButton *m_CloseXCB;
 };
 
 #endif

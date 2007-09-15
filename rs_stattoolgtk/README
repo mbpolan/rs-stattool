@@ -1,8 +1,8 @@
 ===================
 RuneScape Stat Tool
 ===================
-Release date: January 10, 2007
-Version: 0.5
+Release date: September 15, 2007
+Version: 0.6
 
 Official homepage: http://rs-stattool.sf.net
 
@@ -26,9 +26,7 @@ stats and allows you to save them, compare users, etc.
 ~~~~~~~~~~~~~~~~~
 2. What's New?
 ~~~~~~~~~~~~~~~~~
-The ability to save/load/compare player stats to file has finally been implemented.
-
-Along with that, the layout has been slightly tweaked to match that of the Windows version.
+The high scores lite service is now used to fetch stats. Also, a system tray icon is available if the tray is visible.
 
 ~~~~~~~~~~~~~~~~~
 3. Installation
